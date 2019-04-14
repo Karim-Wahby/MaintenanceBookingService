@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
@@ -42,11 +43,27 @@ namespace BookingAMaintenaceService
             // Handle Message activity type, which is the main activity type for shown within a conversational interface
             // Message activities may contain text, speech, interactive cards, and binary or unknown attachments.
             // see https://aka.ms/about-bot-activity-message to learn more about the message and other activity types
-            if (turnContext.Activity.Type == ActivityTypes.Message)
+            switch (turnContext.Activity.Type)
             {
-                // Echo back to the user whatever they typed.             
-                await turnContext.SendActivityAsync("Hello World", cancellationToken: cancellationToken);
+                case ActivityTypes.Message:
+                    await HandleIncommingMessages(turnContext, cancellationToken);
+                    break;
+                case ActivityTypes.DeleteUserData:
+                    DeleteUserCachedData(turnContext, cancellationToken);
+                    break;
+                default:
+                    break;
             }
+        }
+
+        private void DeleteUserCachedData(ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            turnContext.TurnState.Clear();
+        }
+
+        private async Task HandleIncommingMessages(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await turnContext.SendActivityAsync("Hello World", cancellationToken: cancellationToken);
         }
     }
 }
