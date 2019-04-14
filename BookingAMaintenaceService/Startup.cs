@@ -18,6 +18,9 @@ namespace BookingAMaintenaceService
     /// </summary>
     public class Startup
     {
+        private const string DevelopmentEnvName = "development";
+        private const string ProductionEnvName = "production";
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -50,12 +53,12 @@ namespace BookingAMaintenaceService
            {
                var secretKey = Configuration.GetSection("botFileSecret")?.Value;
 
-                // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
-                var botConfig = BotConfiguration.Load(@".\BookingAMaintenaceService.bot", secretKey);
+               // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
+               var botConfig = BotConfiguration.Load(@".\BookingAMaintenaceService.bot", secretKey);
                services.AddSingleton(sp => botConfig);
 
-                // Retrieve current endpoint.
-                var service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == "production").FirstOrDefault();
+               // Retrieve current endpoint.
+               ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == ProductionEnvName).FirstOrDefault();
                if (!(service is EndpointService endpointService))
                {
                    throw new InvalidOperationException($"The .bot file does not contain a development endpoint.");
