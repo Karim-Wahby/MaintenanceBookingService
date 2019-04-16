@@ -2,8 +2,12 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BookingAMaintenaceService.Managers;
+using BookingAMaintenaceService.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
@@ -21,11 +25,14 @@ namespace BookingAMaintenaceService
     /// <seealso cref="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-2.1"/>
     public class BookingAMaintenaceServiceBot : IBot
     {
+        private readonly ConversationStateDataAccessors conversationStateDataAccessor;
+
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>                        
-        public BookingAMaintenaceServiceBot()
+        public BookingAMaintenaceServiceBot(ConversationStateDataAccessors accessors)
         {
+            conversationStateDataAccessor = accessors ?? throw new ArgumentNullException(nameof(accessors));
         }
 
         /// <summary>
@@ -49,21 +56,68 @@ namespace BookingAMaintenaceService
                     await HandleIncommingMessages(turnContext, cancellationToken);
                     break;
                 case ActivityTypes.DeleteUserData:
-                    DeleteUserCachedData(turnContext, cancellationToken);
+                    await handleDeleteUserDataRequest(turnContext, cancellationToken);
+                    break;
+                case ActivityTypes.ConversationUpdate:
+                    await HandleConverstationupdates(turnContext, cancellationToken);
                     break;
                 default:
                     break;
             }
         }
 
-        private void DeleteUserCachedData(ITurnContext turnContext, CancellationToken cancellationToken)
+        private async Task handleDeleteUserDataRequest(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            turnContext.TurnState.Clear();
+            await conversationStateDataAccessor.DeleteUserCachedData(turnContext);
+            await SendMessage("User Data Deleted (Y)!", turnContext, cancellationToken);
+        }
+
+        private async Task HandleConverstationupdates(ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            if (turnContext.Activity.MembersAdded != null)
+            {
+                var theBotId = turnContext.Activity.Recipient.Id;
+                var addedUsers = turnContext.Activity.MembersAdded
+                    .Where(addedMember => addedMember.Id != theBotId);
+
+                if (addedUsers.Any())
+                {
+                    await SayHelloToUsers(addedUsers, turnContext, cancellationToken);
+                }
+
+            }
+        }
+
+        private static async Task SendMessage(string message, ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            await turnContext.SendActivityAsync(message, cancellationToken: cancellationToken);
+
+        }
+
+        private async Task SayHelloToUsers(IEnumerable<ChannelAccount> addedUsers, ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            if (addedUsers == null || !addedUsers.Any())
+            {
+                return;
+            }
+
+            foreach (ChannelAccount member in addedUsers)
+            {
+                await SendMessage($"Hi there - {member.Name}.{Environment.NewLine}Welcome To SALA7LEE.",
+                    turnContext, cancellationToken);
+            }
         }
 
         private async Task HandleIncommingMessages(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await turnContext.SendActivityAsync("Hello World", cancellationToken: cancellationToken);
+            // Get the state properties from the turn context.
+            var userProfile = await conversationStateDataAccessor.GetUserData(turnContext);
+            var conversationData = await conversationStateDataAccessor.GetConversationData(turnContext);
+
+            await turnContext.SendActivityAsync($"Hello World Turn {++conversationData.Counter}", cancellationToken: cancellationToken);
+
+            await conversationStateDataAccessor.UpdateUserData(turnContext, userProfile);
+            await conversationStateDataAccessor.UpdateConversationData(turnContext, conversationData);
         }
     }
 }
