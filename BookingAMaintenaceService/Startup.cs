@@ -1,10 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
-using System;
+﻿using System;
 using System.Linq;
+using BookingAMaintenaceService.Managers;
+using BookingAMaintenaceService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Connector.Authentication;
@@ -49,29 +49,42 @@ namespace BookingAMaintenaceService
         /// <seealso cref="https://docs.microsoft.com/en-us/azure/bot-service/bot-service-manage-channels?view=azure-bot-service-4.0"/>
         public void ConfigureServices(IServiceCollection services)
         {
+            IStorage storage = new MemoryStorage();
+            ConversationState conversationState = new ConversationState(storage);
+            UserState userState = new UserState(storage);
+            services.AddSingleton<ConversationStateDataAccessors>(sp =>
+            {
+                // Create the custom state accessor.
+                return new ConversationStateDataAccessors(
+                    conversationState,
+                    userState,
+                    conversationState.CreateProperty<ConversationData>(ConversationStateDataAccessors.ConversationDataName),
+                    userState.CreateProperty<UserData>(ConversationStateDataAccessors.UserDataName));
+            });
+
             services.AddBot<BookingAMaintenaceServiceBot>(options =>
-           {
-               var secretKey = Configuration.GetSection("botFileSecret")?.Value;
+            {
+                var secretKey = Configuration.GetSection("botFileSecret")?.Value;
 
-               // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
-               var botConfig = BotConfiguration.Load(@".\BookingAMaintenaceService.bot", secretKey);
-               services.AddSingleton(sp => botConfig);
+                // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
+                var botConfig = BotConfiguration.Load(@".\BookingAMaintenaceService.bot", secretKey);
+                services.AddSingleton(sp => botConfig);
 
-               // Retrieve current endpoint.
-               ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == ProductionEnvName).FirstOrDefault();
-               if (!(service is EndpointService endpointService))
-               {
-                   throw new InvalidOperationException($"The .bot file does not contain a development endpoint.");
-               }
+                // Retrieve current endpoint.
+                ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == ProductionEnvName).FirstOrDefault();
+                if (!(service is EndpointService endpointService))
+                {
+                    throw new InvalidOperationException($"The .bot file does not contain a development endpoint.");
+                }
 
-               options.CredentialProvider = new SimpleCredentialProvider(endpointService.AppId, endpointService.AppPassword);
+                options.CredentialProvider = new SimpleCredentialProvider(endpointService.AppId, endpointService.AppPassword);
 
                 // Catches any errors that occur during a conversation turn and logs them.
                 options.OnTurnError = async (context, exception) =>
-               {
-                   await context.SendActivityAsync("Sorry, it looks like something went wrong.");
-               };
-           });
+                {
+                    await context.SendActivityAsync("Sorry, it looks like something went wrong.");
+                };
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
