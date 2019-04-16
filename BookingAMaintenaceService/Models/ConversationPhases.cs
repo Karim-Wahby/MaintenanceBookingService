@@ -1,6 +1,6 @@
 ﻿namespace BookingAMaintenaceService.Models
 {
-    public enum ConversationStates
+    public enum ConversationPhases
     {
         GreetingTheUser,
         SelectingUserPreferredLanguage,
