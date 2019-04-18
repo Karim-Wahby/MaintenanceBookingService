@@ -59,7 +59,7 @@ namespace BookingAMaintenaceService
                     await handleDeleteUserDataRequest(turnContext, cancellationToken);
                     break;
                 case ActivityTypes.ConversationUpdate:
-                    await HandleConverstationupdates(turnContext, cancellationToken);
+                    await HandleConverstationUpdates(turnContext, cancellationToken);
                     break;
                 default:
                     break;
@@ -72,7 +72,7 @@ namespace BookingAMaintenaceService
             await SendMessage("User Data Deleted (Y)!", turnContext, cancellationToken);
         }
 
-        private async Task HandleConverstationupdates(ITurnContext turnContext, CancellationToken cancellationToken)
+        private async Task HandleConverstationUpdates(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             if (turnContext.Activity.MembersAdded != null)
             {
