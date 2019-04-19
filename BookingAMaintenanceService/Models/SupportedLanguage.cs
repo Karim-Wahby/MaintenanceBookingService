@@ -1,4 +1,4 @@
-﻿namespace BookingAMaintenaceService.Models
+﻿namespace BookingAMaintenanceService.Models
 {
     public enum SupportedLanguage
     {

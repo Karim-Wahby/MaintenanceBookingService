@@ -1,6 +1,6 @@
-﻿namespace BookingAMaintenaceService.Managers
+﻿namespace BookingAMaintenanceService.Managers
 {
-    using BookingAMaintenaceService.Models;
+    using BookingAMaintenanceService.Models;
     using Microsoft.Bot.Builder;
     using System;
     using System.Threading.Tasks;

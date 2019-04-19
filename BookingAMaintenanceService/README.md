@@ -1,4 +1,4 @@
-﻿# BookingAMaintenaceService
+﻿# BookingAMaintenanceService
 
 This bot is an empty bot skeleton that returns "Hello World" for all requests.
 This bot has been created using [Microsoft Bot Framework][1].
@@ -11,7 +11,7 @@ This bot has been created using [Microsoft Bot Framework][1].
 # Running Locally
 
 ## Visual Studio
-- Open BookingAMaintenaceService.csproj in Visual Studio.
+- Open BookingAMaintenanceService.csproj in Visual Studio.
 - Run the project (press `F5` key).
 
 ## Testing the bot using Bot Framework Emulator
@@ -21,7 +21,7 @@ developers to test and debug their bots on localhost or running remotely through
 
 ## Connect to bot using Bot Framework Emulator **V4**
 - Launch the Bot Framework Emulator.
-- File -> Open bot and open [BookingAMaintenaceService.bot](BookingAMaintenaceService.bot).
+- File -> Open bot and open [BookingAMaintenanceService.bot](BookingAMaintenanceService.bot).
 
 # Deploy the bot to Azure
 See [Deploy your C# bot to Azure][50] for instructions.

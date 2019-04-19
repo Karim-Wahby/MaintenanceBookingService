@@ -6,7 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="BookingAMaintenaceService.bot">
+    <None Remove="BookingAMaintenanceService.bot" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="BookingAMaintenanceService.bot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

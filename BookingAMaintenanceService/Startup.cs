@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using BookingAMaintenaceService.Managers;
-using BookingAMaintenaceService.Models;
+using BookingAMaintenanceService.Managers;
+using BookingAMaintenanceService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Builder;
@@ -11,7 +11,7 @@ using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookingAMaintenaceService
+namespace BookingAMaintenanceService
 {
     /// <summary>
     /// The Startup class configures services and the request pipeline.
@@ -62,16 +62,16 @@ namespace BookingAMaintenaceService
                     userState.CreateProperty<UserData>(ConversationStateDataAccessors.UserDataName));
             });
 
-            services.AddBot<BookingAMaintenaceServiceBot>(options =>
+            services.AddBot<BookingAMaintenanceServiceBot>(options =>
             {
                 var secretKey = Configuration.GetSection("botFileSecret")?.Value;
 
                 // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
-                var botConfig = BotConfiguration.Load(@".\BookingAMaintenaceService.bot", secretKey);
+                var botConfig = BotConfiguration.Load(@".\BookingAMaintenanceService.bot", secretKey);
                 services.AddSingleton(sp => botConfig);
 
                 // Retrieve current endpoint.
-                ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == ProductionEnvName).FirstOrDefault();
+                ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == DevelopmentEnvName).FirstOrDefault();
                 if (!(service is EndpointService endpointService))
                 {
                     throw new InvalidOperationException($"The .bot file does not contain a development endpoint.");

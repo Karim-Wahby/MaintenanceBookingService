@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BookingAMaintenaceService.Managers;
-using BookingAMaintenaceService.Models;
+using BookingAMaintenanceService.Managers;
+using BookingAMaintenanceService.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
-namespace BookingAMaintenaceService
+namespace BookingAMaintenanceService
 {
     /// <summary>
     /// Represents a bot that processes incoming activities.
@@ -23,14 +23,14 @@ namespace BookingAMaintenaceService
     /// <see cref="IStatePropertyAccessor{T}"/> object are created with a singleton lifetime.
     /// </summary>
     /// <seealso cref="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-2.1"/>
-    public class BookingAMaintenaceServiceBot : IBot
+    public class BookingAMaintenanceServiceBot : IBot
     {
         private readonly ConversationStateDataAccessors conversationStateDataAccessor;
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>                        
-        public BookingAMaintenaceServiceBot(ConversationStateDataAccessors accessors)
+        public BookingAMaintenanceServiceBot(ConversationStateDataAccessors accessors)
         {
             conversationStateDataAccessor = accessors ?? throw new ArgumentNullException(nameof(accessors));
         }
@@ -126,13 +126,9 @@ namespace BookingAMaintenaceService
 
             do
             {
-                // case ConversationPhases.BookingAMaintenanceService:
-                //     break;
                 // case ConversationPhases.UpdatingTheUserWithHisBookingRequestsStatus:
                 //     break;
                 // case ConversationPhases.RequestingUserFeedbackOfDeliveredService:
-                //     break;
-                // default:
                 //     break;
                 if (!userProfile.PreferredLanguage.HasValue)
                 {
@@ -146,9 +142,8 @@ namespace BookingAMaintenaceService
                 }
                 else if (conversationData.CurrentConversationIntent == BotSupportedIntents.BookingAMaintenanceService)
                 {
-                    await SendMessage("booking a maintenance service dialog", turnContext, cancellationToken);
-                    userProfile = new UserData();
-                    conversationData = new ConversationData();
+                    // the user want to book one of our services
+                    await BookingAMaintenanceServiceConversation(turnContext, cancellationToken, conversationData, userProfile);
                 }
                 else if (conversationData.CurrentConversationIntent == BotSupportedIntents.GettingUpdatesAboutCurrentRequests)
                 {
@@ -164,9 +159,20 @@ namespace BookingAMaintenaceService
                 }
             } while (!conversationData.WaitingForUserInput) ;
             
-
             await conversationStateDataAccessor.UpdateUserData(turnContext, userProfile);
             await conversationStateDataAccessor.UpdateConversationData(turnContext, conversationData);
+        }
+
+        private async Task BookingAMaintenanceServiceConversation(ITurnContext turnContext, CancellationToken cancellationToken, ConversationData conversationData, UserData userProfile)
+        {
+            if (conversationData.WaitingForUserInput)
+            {
+                // if (conversationData.)
+            }
+            else
+            {
+            }
+            // await SendMessage("booking a maintenance service dialog", turnContext, cancellationToken);
         }
 
         private async Task SelectingUserIntentFromConversation(ITurnContext turnContext, CancellationToken cancellationToken, ConversationData conversationData, UserData userProfile)
@@ -240,6 +246,7 @@ namespace BookingAMaintenaceService
                         turnContext,
                         cancellationToken);
                 }
+
                 SetWaitingForUserInputFlag(conversationData);
             }
         }

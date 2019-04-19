@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookingAMaintenaceService.Models
+namespace BookingAMaintenanceService.Models
 {
     public class UserData
     {

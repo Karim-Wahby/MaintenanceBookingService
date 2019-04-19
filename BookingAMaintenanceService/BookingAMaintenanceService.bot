@@ -1,5 +1,5 @@
 ﻿{
-  "name": "BookingAMaintenaceService",
+  "name": "BookingAMaintenanceService",
   "services": [
     {
       "type": "endpoint",
