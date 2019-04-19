@@ -71,7 +71,7 @@ namespace BookingAMaintenanceService
                 services.AddSingleton(sp => botConfig);
 
                 // Retrieve current endpoint.
-                ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == DevelopmentEnvName).FirstOrDefault();
+                ConnectedService service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == ProductionEnvName).FirstOrDefault();
                 if (!(service is EndpointService endpointService))
                 {
                     throw new InvalidOperationException($"The .bot file does not contain a development endpoint.");
