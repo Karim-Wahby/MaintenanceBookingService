@@ -94,6 +94,16 @@ namespace BookingAMaintenaceService
 
         }
 
+        public static void SetWaitingForUserInputFlag(ConversationData conversationData, bool value = true)
+        {
+            conversationData.WaitingForUserInput = value;
+        }
+
+        public static string GetUserReply(ITurnContext turnContext)
+        {
+            return turnContext.Activity.Text;
+        }
+
         private async Task SayHelloToUsers(IEnumerable<ChannelAccount> addedUsers, ITurnContext turnContext, CancellationToken cancellationToken)
         {
             if (addedUsers == null || !addedUsers.Any())
@@ -114,10 +124,169 @@ namespace BookingAMaintenaceService
             var userProfile = await conversationStateDataAccessor.GetUserData(turnContext);
             var conversationData = await conversationStateDataAccessor.GetConversationData(turnContext);
 
-            await turnContext.SendActivityAsync($"Hello World Turn {++conversationData.Counter}", cancellationToken: cancellationToken);
+            do
+            {
+                // case ConversationPhases.BookingAMaintenanceService:
+                //     break;
+                // case ConversationPhases.UpdatingTheUserWithHisBookingRequestsStatus:
+                //     break;
+                // case ConversationPhases.RequestingUserFeedbackOfDeliveredService:
+                //     break;
+                // default:
+                //     break;
+                if (!userProfile.PreferredLanguage.HasValue)
+                {
+                    // it's Time To ask the user for his preferred language
+                    await SelectingUserPreferredLanguage(turnContext, cancellationToken, conversationData, userProfile);
+                }
+                else if (!conversationData.CurrentConversationIntent.HasValue)
+                {
+                    // it's time to know what is the user intent 
+                    await SelectingUserIntentFromConversation(turnContext, cancellationToken, conversationData, userProfile);
+                }
+                else if (conversationData.CurrentConversationIntent == BotSupportedIntents.BookingAMaintenanceService)
+                {
+                    await SendMessage("booking a maintenance service dialog", turnContext, cancellationToken);
+                    userProfile = new UserData();
+                    conversationData = new ConversationData();
+                }
+                else if (conversationData.CurrentConversationIntent == BotSupportedIntents.GettingUpdatesAboutCurrentRequests)
+                {
+                    await SendMessage("getting updates about current requests dialog", turnContext, cancellationToken);
+                    userProfile = new UserData();
+                    conversationData = new ConversationData();
+                }
+                else
+                {
+                    await SendMessage("Next Step !!!", turnContext, cancellationToken);
+                    userProfile = new UserData();
+                    conversationData = new ConversationData();
+                }
+            } while (!conversationData.WaitingForUserInput) ;
+            
 
             await conversationStateDataAccessor.UpdateUserData(turnContext, userProfile);
             await conversationStateDataAccessor.UpdateConversationData(turnContext, conversationData);
+        }
+
+        private async Task SelectingUserIntentFromConversation(ITurnContext turnContext, CancellationToken cancellationToken, ConversationData conversationData, UserData userProfile)
+        {
+            if (conversationData.WaitingForUserInput)
+            {
+                var userInput = GetUserReply(turnContext).Trim();
+                switch (userInput)
+                {
+                    case "1":
+                        conversationData.CurrentConversationIntent = BotSupportedIntents.BookingAMaintenanceService;
+                        break;
+                    case "2":
+                        conversationData.CurrentConversationIntent = BotSupportedIntents.GettingUpdatesAboutCurrentRequests;
+                        break;
+                }
+
+                if (conversationData.CurrentConversationIntent.HasValue)
+                {
+                    SetWaitingForUserInputFlag(conversationData, false);
+                    return;
+                }
+
+                if (userProfile.PreferredLanguage.Value == SupportedLanguage.Arabic)
+                {
+                    userInput = userInput.ToLower();
+                    await SendMessage($" بالعربى {Environment.NewLine}" +
+                        $"The value that you Entired couldn't be recognized,{Environment.NewLine}" +
+                        "please select one of the provided options (1, 2, ...)",
+                        turnContext,
+                        cancellationToken);
+                }
+                else
+                {
+                    if (userInput.Contains("status") || userInput.Contains("check"))
+                    {
+                        conversationData.CurrentConversationIntent = BotSupportedIntents.GettingUpdatesAboutCurrentRequests;
+                    }
+                    else if (userInput.Contains("book") || userInput.Contains("new"))
+                    {
+                        conversationData.CurrentConversationIntent = BotSupportedIntents.BookingAMaintenanceService;
+                    }
+                    else
+                    {
+                        userInput = userInput.ToLower();
+                        await SendMessage($"The value that you Entired couldn't be recognized,{Environment.NewLine}" +
+                            "please select one of the provided options (1, 2, ...)",
+                            turnContext,
+                            cancellationToken);
+                    }
+                }
+
+
+                if (conversationData.CurrentConversationIntent.HasValue)
+                {
+                    SetWaitingForUserInputFlag(conversationData, false);
+                    return;
+                }
+            }
+            else
+            {
+                if (userProfile.PreferredLanguage.Value == SupportedLanguage.Arabic)
+                {
+                    await SendMessage($"عربى SelectingUserIntentFromConversation", turnContext, cancellationToken);
+                }
+                else
+                {
+                    await SendMessage($"How Can I Help You Today:{Environment.NewLine}" +
+                        $"1- Book a new Maintenance Service {Environment.NewLine}" +
+                        $"2- Check your Requests Status{Environment.NewLine}",
+                        turnContext,
+                        cancellationToken);
+                }
+                SetWaitingForUserInputFlag(conversationData);
+            }
+        }
+
+        private async Task SelectingUserPreferredLanguage(ITurnContext turnContext, CancellationToken cancellationToken, ConversationData conversationData, UserData userProfile)
+        {
+            if (conversationData.WaitingForUserInput)
+            {
+                var userInput = GetUserReply(turnContext).ToLower().Trim();
+                switch (userInput)
+                {
+                    case "english":
+                    case "eng":
+                    case "1":
+                        userProfile.PreferredLanguage = SupportedLanguage.English;
+                        break;
+                    case "ar":
+                    case "arabic":
+                    case "عربى":
+                    case "2":
+                        userProfile.PreferredLanguage = SupportedLanguage.Arabic;
+                        break;
+                    default:
+                        await SendMessage($"The value that you Entired couldn't be recognized,{Environment.NewLine}" +
+                            "please select one of the provided options (1, 2, ...)",
+                            turnContext,
+                            cancellationToken);
+                        break;
+                }
+
+                if (userProfile.PreferredLanguage.HasValue)
+                {
+                    SetWaitingForUserInputFlag(conversationData, false);
+                }
+            }
+            else
+            {
+                await SendMessage(
+                $"Please Select Your prefered Language:-{Environment.NewLine}" +
+                $"أختر اللغه التى تفضلها رجاء{Environment.NewLine}" +
+                $"1- English{Environment.NewLine}" +
+                $"2- عربى",
+                turnContext,
+                cancellationToken);
+
+                SetWaitingForUserInputFlag(conversationData);
+            }
         }
     }
 }

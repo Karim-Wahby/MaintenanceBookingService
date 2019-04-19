@@ -7,6 +7,6 @@
         SelectingUserIntent,
         BookingAMaintenanceService,
         UpdatingTheUserWithHisBookingRequestsStatus,
-        RequestingUserFeedbackOfDeliveredService,
+        RequestingUserFeedbackOfDeliveredService
     }
 }

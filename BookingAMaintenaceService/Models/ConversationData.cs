@@ -7,7 +7,11 @@ namespace BookingAMaintenaceService.Models
 {
     public class ConversationData
     {
-        public ConversationPhases ConversationState { get; set; } = ConversationPhases.GreetingTheUser;
+        // public ConversationPhases LastConversationState { get; set; } = ConversationPhases.GreetingTheUser;
+        public BotSupportedIntents? CurrentConversationIntent { get; set; } = null;
+
+        public bool WaitingForUserInput { get; set; } = false;
+
         public int Counter { get; set; } = 0;
     }
 }
