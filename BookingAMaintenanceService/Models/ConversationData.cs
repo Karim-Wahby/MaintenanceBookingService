@@ -12,5 +12,15 @@ namespace BookingAMaintenanceService.Models
         public BookingAMaintenanceServiceForm ServiceBookingForm { get; set; } = null;
 
         public bool WaitingForUserInput { get; set; } = false;
+
+        public static void SetWaitingForUserInputFlag(ConversationData conversationData, bool value = true)
+        {
+            conversationData.WaitingForUserInput = value;
+        }
+
+        public void SetWaitingForUserInputFlag(bool value = true)
+        {
+            this.WaitingForUserInput = value;
+        }
     }
 }
