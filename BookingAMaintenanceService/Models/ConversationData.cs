@@ -9,7 +9,7 @@ namespace BookingAMaintenanceService.Models
     {
         public BotSupportedIntents? CurrentConversationIntent { get; set; } = null;
 
-        // public BookingAMaintenanceServiceForm
+        public BookingAMaintenanceServiceForm ServiceBookingForm { get; set; } = null;
 
         public bool WaitingForUserInput { get; set; } = false;
     }
