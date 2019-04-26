@@ -37,11 +37,14 @@
             Message message,
             UserData userProfile,
             ITurnContext turnContext,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            MessageOption extraOptions = null)
         {
+            var allOptions = MessageOption.CombineOptions(message.Options, extraOptions);
             if (message.IsLanguageIndependent || userProfile.PreferredLanguage == null)
             {
-                var options = message.CombineLanguagesOptions();
+                var options = allOptions?.CombineLanguagesOptions();
+
                 if (options != null && options.Count() > 0)
                 {
                     await SendMessageWithOptions(message.English, turnContext, cancellationToken, options);
@@ -53,9 +56,9 @@
             }
             else if (userProfile.PreferredLanguage.Value == SupportedLanguage.Arabic)
             {
-                if (message.ArabicOptions != null && message.ArabicOptions.Count() > 0)
+                if (allOptions?.Arabic != null && allOptions.Arabic.Count() > 0)
                 {
-                    await SendMessageWithOptions(message.Arabic, turnContext, cancellationToken, message.ArabicOptions);
+                    await SendMessageWithOptions(message.Arabic, turnContext, cancellationToken, allOptions.Arabic);
                 }
                 else
                 {
@@ -64,9 +67,9 @@
             }
             else if (userProfile.PreferredLanguage.Value == SupportedLanguage.English)
             {
-                if (message.EnglishOptions != null && message.EnglishOptions.Count() > 0)
+                if (allOptions?.English != null && allOptions.English.Count() > 0)
                 {
-                    await SendMessageWithOptions(message.English, turnContext, cancellationToken, message.EnglishOptions);
+                    await SendMessageWithOptions(message.English, turnContext, cancellationToken, allOptions.English);
                 }
                 else
                 {
@@ -78,10 +81,10 @@
                 // TODO:- Telemtry for invalid state
             }
         }
-
+        
         public static string GetUserReply(ITurnContext turnContext)
         {
-            return turnContext.Activity.Text;
+            return turnContext.Activity.Text?.Trim().ToLower();
         }
     }
 }

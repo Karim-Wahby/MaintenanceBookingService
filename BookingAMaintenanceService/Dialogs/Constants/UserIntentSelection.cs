@@ -16,8 +16,11 @@
             English = $"How Can I Help You Today:{Environment.NewLine}" +
                         $"1- Book a new Maintenance Service {Environment.NewLine}" +
                         $"2- Check your Requests Status{Environment.NewLine}",
-            ArabicOptions = new string[] { "استعلام", "حجز" },
-            EnglishOptions = new string[] { "Make a reservation", "Check Request Status" }
+            Options = new MessageOption()
+            {
+                Arabic = new string[] { "استعلام", "حجز" },
+                English = new string[] { "Make a reservation", "Check Request Status" }
+            }
         };
 
 
@@ -26,7 +29,7 @@
             "حجز",
             "book",
             "new",
-            "Make a reservation".ToLower(),
+            "make a reservation",
             "1"
         };
 
@@ -35,7 +38,7 @@
             "استعلام",
             "check",
             "status",
-            "Check Request Status".ToLower(),
+            "check Request Status",
             "2"
         };
     }

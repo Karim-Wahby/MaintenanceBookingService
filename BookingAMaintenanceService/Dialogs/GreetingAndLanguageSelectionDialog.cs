@@ -12,7 +12,8 @@
 
     public class GreetingAndLanguageSelectionDialog : IStatelessDialog
     {
-        public GreetingAndLanguageSelectionDialog(ConversationData conversationData, UserData userProfile) : base(conversationData, userProfile)
+        public GreetingAndLanguageSelectionDialog(ConversationData conversationData, UserData userProfile)
+            : base(conversationData, userProfile)
         {
         }
 
@@ -35,12 +36,12 @@
 
         public override async Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            var userInput = ConversationUtils.GetUserReply(turnContext)?.ToLower().Trim();
-            if (Constants.LanguageSelection.EnglishLanguagePossibleSelectionValues.Contains(userInput))
+            var userInput = ConversationUtils.GetUserReply(turnContext);
+            if (DialogUtils.IsUserInputInOptions(userInput, Constants.LanguageSelection.EnglishLanguagePossibleSelectionValues))
             {
                 userProfile.PreferredLanguage = SupportedLanguage.English;
             }
-            else if (Constants.LanguageSelection.ArabicLanguagePossibleSelectionValues.Contains(userInput))
+            else if (DialogUtils.IsUserInputInOptions(userInput, Constants.LanguageSelection.ArabicLanguagePossibleSelectionValues))
             {
                 userProfile.PreferredLanguage = SupportedLanguage.Arabic;
             }

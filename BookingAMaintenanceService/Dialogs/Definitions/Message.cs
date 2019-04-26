@@ -15,9 +15,7 @@
 
         public string English { get; set; }
 
-        public string[] ArabicOptions { get; set; } = null;
-
-        public string[] EnglishOptions { get; set; } = null;
+        public MessageOption Options { get; set; }
 
         public string CombineLanguageValues(string separator = null)
         {
@@ -27,11 +25,6 @@
             }
 
             return English + separator + Arabic;
-        }
-
-        public string[] CombineLanguagesOptions()
-        {
-            return CombineOptions(ArabicOptions, EnglishOptions);
         }
 
         public string[] GetLanguagesValuesAsOptions()
@@ -50,28 +43,9 @@
             {
                 Arabic = firstMessage.Arabic + messageStringSeparator + secondMessage.Arabic,
                 English = firstMessage.English + messageStringSeparator + secondMessage.English,
-                ArabicOptions = CombineOptions(firstMessage.ArabicOptions, secondMessage.ArabicOptions),
-                EnglishOptions = CombineOptions(firstMessage.EnglishOptions, secondMessage.EnglishOptions)
+                Options = MessageOption.CombineOptions(firstMessage.Options, secondMessage.Options),
             };
         }
 
-        private static string[] CombineOptions(string[] firstOptions, string[] secondOptions)
-        {
-            string[] newOptions = null;
-            if (firstOptions != null && secondOptions != null)
-            {
-                newOptions = firstOptions.Union(secondOptions).Distinct().ToArray();
-            }
-            else if (firstOptions != null)
-            {
-                newOptions = firstOptions;
-            }
-            else
-            {
-                newOptions = secondOptions;
-            }
-
-            return newOptions;
-        }
     }
 }

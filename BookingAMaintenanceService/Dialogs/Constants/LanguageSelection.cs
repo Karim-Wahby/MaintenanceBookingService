@@ -19,8 +19,11 @@
             IsLanguageIndependent = true,
             English = askingForpreferredLanguageMessage,
             Arabic = askingForpreferredLanguageMessage,
-            ArabicOptions = new string[] { "عربى" },
-            EnglishOptions = new string[] { "English" }
+            Options = new MessageOption()
+            {
+                Arabic = new string[] { "عربى" },
+                English = new string[] { "English" }
+            }
         };
 
         public static HashSet<string> ArabicLanguagePossibleSelectionValues = new HashSet<string>()
@@ -40,12 +43,12 @@
 
         static LanguageSelection()
         {
-            foreach (var option in AskingForpreferredLanguage.ArabicOptions)
+            foreach (var option in AskingForpreferredLanguage.Options.Arabic)
             {
                 ArabicLanguagePossibleSelectionValues.Add(option);
             }
 
-            foreach (var option in AskingForpreferredLanguage.EnglishOptions)
+            foreach (var option in AskingForpreferredLanguage.Options.English)
             {
                 EnglishLanguagePossibleSelectionValues.Add(option.ToLower());
             }

@@ -14,6 +14,12 @@
             Arabic = $"القيمه التى ادخلتها غير صحيحه{Environment.NewLine}فضلا اختر واحده من القيم المعطاه او ادخل قيمه صحيحه"
         };
 
+        public static Message EmptyValueProvided = new Message()
+        {
+            English = $"Sorry, didn't recive any response, Please write someting as a response",
+            Arabic = $"معذره, لم نتلق ردا, برجاء كتابه شئ ما"
+        };
+
         public static Message Greetings = new Message()
         {
             English = $"Hi there - {{0}}.{Environment.NewLine}Welcome To SALA7LEE.",

@@ -12,7 +12,8 @@
 
     public class SelectingUserIntentDialog : IStatelessDialog
     {
-        public SelectingUserIntentDialog(ConversationData conversationData, UserData userProfile) : base(conversationData, userProfile)
+        public SelectingUserIntentDialog(ConversationData conversationData, UserData userProfile)
+            : base(conversationData, userProfile)
         {
         }
 
@@ -30,12 +31,12 @@
         {
             if (conversationData.WaitingForUserInput)
             {
-                var userInput = ConversationUtils.GetUserReply(turnContext)?.Trim().ToLower();
-                if (Constants.UserIntentSelection.ReservationPossibleSelectionValues.Contains(userInput))
+                var userInput = ConversationUtils.GetUserReply(turnContext);
+                if (DialogUtils.IsUserInputInOptions(userInput, Constants.UserIntentSelection.ReservationPossibleSelectionValues))
                 {
                     conversationData.CurrentConversationIntent = BotSupportedIntents.BookingAMaintenanceService;
                 }
-                else if (Constants.UserIntentSelection.CheckingStatusPossibleSelectionValues.Contains(userInput))
+                else if (DialogUtils.IsUserInputInOptions(userInput, Constants.UserIntentSelection.CheckingStatusPossibleSelectionValues))
                 {
                     conversationData.CurrentConversationIntent = BotSupportedIntents.GettingUpdatesAboutCurrentRequests;
                 }

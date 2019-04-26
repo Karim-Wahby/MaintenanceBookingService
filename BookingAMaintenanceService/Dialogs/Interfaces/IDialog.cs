@@ -7,7 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    interface IDialog
+    public interface IDialog
     {
         Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken);
 
