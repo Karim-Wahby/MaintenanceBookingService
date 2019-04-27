@@ -73,7 +73,7 @@ namespace MaintenanceBookingService
                 // Retrieve current endpoint.
                 ConnectedService service = botConfig.Services
                     .Where(s => s.Type == "endpoint" && 
-                                s.Name == DevelopmentEnvName)
+                                s.Name == ProductionEnvName)
                     .FirstOrDefault();
                 if (!(service is EndpointService endpointService))
                 {
