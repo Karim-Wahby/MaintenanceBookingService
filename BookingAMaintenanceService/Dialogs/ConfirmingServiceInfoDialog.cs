@@ -20,6 +20,7 @@
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.ApprovalOptionValues))
             {
+                
                 await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                     Constants.Confirmation.RequestSupmittedMessage,
                     this.userProfile,

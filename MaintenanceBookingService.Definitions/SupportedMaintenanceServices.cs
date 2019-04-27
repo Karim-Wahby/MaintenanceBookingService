@@ -1,4 +1,4 @@
-﻿namespace BookingAMaintenanceService.Models
+﻿namespace MaintenanceBookingService.Definitions
 {
     public enum SupportedMaintenanceServices
     {

@@ -6,6 +6,7 @@
     using BookingAMaintenanceService.Dialogs.Interfaces;
     using BookingAMaintenanceService.Dialogs.Utilities;
     using BookingAMaintenanceService.Models;
+    using MaintenanceBookingService.Definitions;
     using Microsoft.Bot.Builder;
 
     public class SelectingRequestedMaintenanceServiceDialog : IStatelessDialog
