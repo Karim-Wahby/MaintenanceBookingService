@@ -12,10 +12,10 @@
     {
       "type": "endpoint",
       "name": "production",
-      "endpoint": "https://dxwandbookingservice.azurewebsites.net/api/messages",
-      "appId": "bd2243fe-33d8-4251-925e-34a8e822cd02",
-      "appPassword": "ntqqTESJ98)crpKDY064*^;",
-      "id": "dxWandBookingService"
+      "endpoint": "https://dxwandmaintenancebookingservice-bot.azurewebsites.net/api/messages",
+      "appId": "55250ad9-00a3-4379-86e4-51ae207e9e65",
+      "appPassword": "gzutRSU770+ftlVLCW39!-~",
+      "id": "dxWandMaintenanceBookingService-bot"
     }
   ],
   "padlock": "",
