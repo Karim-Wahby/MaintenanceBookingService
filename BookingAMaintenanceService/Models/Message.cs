@@ -1,4 +1,4 @@
-﻿namespace BookingAMaintenanceService.Dialogs.Definitions
+﻿namespace BookingAMaintenanceService.Models
 {
     using System;
     using System.Collections.Generic;

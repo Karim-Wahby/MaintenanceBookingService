@@ -38,42 +38,60 @@
             UserData userProfile,
             ITurnContext turnContext,
             CancellationToken cancellationToken,
-            MessageOption extraOptions = null)
+            MessageOption extraOptions = null,
+            MessageOption formattingValues = null)
         {
             var allOptions = MessageOption.CombineOptions(message.Options, extraOptions);
             if (message.IsLanguageIndependent || userProfile.PreferredLanguage == null)
             {
                 var options = allOptions?.CombineLanguagesOptions();
+                var messageText = message.English;
+                if (formattingValues?.English != null && formattingValues.English.Any())
+                {
+                    messageText = string.Format(messageText, formattingValues.English);
+                }
 
                 if (options != null && options.Count() > 0)
                 {
-                    await SendMessageWithOptions(message.English, turnContext, cancellationToken, options);
+                    await SendMessageWithOptions(messageText, turnContext, cancellationToken, options);
                 }
                 else
                 {
-                    await SendMessage(message.English, turnContext, cancellationToken);
+                    await SendMessage(messageText, turnContext, cancellationToken);
                 }
             }
             else if (userProfile.PreferredLanguage.Value == SupportedLanguage.Arabic)
             {
+                var messageText = message.Arabic;
+                if (formattingValues?.Arabic != null && formattingValues.Arabic.Any())
+                {
+                    messageText = string.Format(messageText, formattingValues.Arabic);
+                }
+
                 if (allOptions?.Arabic != null && allOptions.Arabic.Count() > 0)
                 {
-                    await SendMessageWithOptions(message.Arabic, turnContext, cancellationToken, allOptions.Arabic);
+                    await SendMessageWithOptions(messageText, turnContext, cancellationToken, allOptions.Arabic);
                 }
                 else
                 {
-                    await SendMessage(message.Arabic, turnContext, cancellationToken);
+                    await SendMessage(messageText, turnContext, cancellationToken);
                 }
             }
             else if (userProfile.PreferredLanguage.Value == SupportedLanguage.English)
             {
+                var messageText = message.English;
+                if (formattingValues?.English != null && formattingValues.English.Any())
+                {
+                    messageText = string.Format(messageText, formattingValues.English);
+                }
+
                 if (allOptions?.English != null && allOptions.English.Count() > 0)
                 {
-                    await SendMessageWithOptions(message.English, turnContext, cancellationToken, allOptions.English);
+                    await SendMessageWithOptions(messageText, turnContext, cancellationToken, allOptions.English);
                 }
                 else
                 {
-                    await SendMessage(message.English, turnContext, cancellationToken);
+                    await SendMessage(messageText, turnContext, cancellationToken);
                 }
             }
             else

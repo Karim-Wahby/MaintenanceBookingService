@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BookingAMaintenanceService.Dialogs.Definitions
+﻿namespace BookingAMaintenanceService.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class MessageOption
     {
         public string[] Arabic { get; set; } = null;

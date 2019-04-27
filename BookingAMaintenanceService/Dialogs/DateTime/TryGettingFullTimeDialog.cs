@@ -23,7 +23,21 @@
             TimeSpan? userRequestedTime = null;
             if (Utilities.DialogUtils.IsUserInputInOptions(userInput, Constants.ServiceFieldsMessages.AsSoonAsPossibleOptionValues))
             {
-                userRequestedTime = DateTime.Now.AddHours(1).TimeOfDay;
+                var todayDateAndTime = DateTime.Now;
+                if (conversationData.ServiceBookingForm.Year > todayDateAndTime.Year ||
+                    conversationData.ServiceBookingForm.Month > todayDateAndTime.Month ||
+                    conversationData.ServiceBookingForm.Day > todayDateAndTime.Day)
+                {
+                    userRequestedTime = new TimeSpan(8, 0, 0);
+                }
+                else
+                {
+                    userRequestedTime = todayDateAndTime.AddHours(1).TimeOfDay;
+                    if (userRequestedTime.Value.Hours < todayDateAndTime.Hour)
+                    {
+                        userRequestedTime = new TimeSpan(23, 59, 59);
+                    }
+                }
             }
             else if (!Utilities.DialogUtils.TryGetTimeFromUserInput(userInput, out userRequestedTime))
             {
@@ -33,7 +47,7 @@
             if (userRequestedTime.HasValue)
             {
                 conversationData.SetWaitingForUserInputFlag(false);
-                conversationData.ServiceBookingForm.Hour = userRequestedTime.Value.Hours;
+                conversationData.ServiceBookingForm.Hour = userRequestedTime.Value.Hours % 12;
                 conversationData.ServiceBookingForm.Minutes = userRequestedTime.Value.Minutes;
                 conversationData.ServiceBookingForm.DayOrNight = userRequestedTime.Value.Hours > 12 ? "PM" : "AM";
             }

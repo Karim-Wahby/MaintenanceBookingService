@@ -30,7 +30,7 @@
                 this.userProfile,
                 turnContext,
                 cancellationToken,
-                new Definitions.MessageOption()
+                new MessageOption()
                 {
                     English = dayMessageExtraOptions,
                     Arabic = dayMessageExtraOptions

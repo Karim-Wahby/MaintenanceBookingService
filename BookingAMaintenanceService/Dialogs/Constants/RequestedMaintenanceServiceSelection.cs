@@ -1,6 +1,7 @@
 ﻿namespace BookingAMaintenanceService.Dialogs.Constants
 {
     using BookingAMaintenanceService.Dialogs.Definitions;
+    using BookingAMaintenanceService.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
