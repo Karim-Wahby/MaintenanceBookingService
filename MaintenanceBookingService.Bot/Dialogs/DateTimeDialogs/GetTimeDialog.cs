@@ -1,8 +1,8 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs.DateTimeDialogs
 {
-    using MaintenanceBookingService.Dialogs.Definitions;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Definitions;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Models;
 
     public class GetTimeDialog : IStatefulDialog<GettingTimeStatuses>
     {

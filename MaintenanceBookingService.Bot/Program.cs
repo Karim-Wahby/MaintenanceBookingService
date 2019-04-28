@@ -5,7 +5,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MaintenanceBookingService
+namespace MaintenanceBookingService.Bot
 {
     public class Program
     {

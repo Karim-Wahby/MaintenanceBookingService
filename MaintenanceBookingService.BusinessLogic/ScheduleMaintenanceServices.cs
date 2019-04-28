@@ -7,18 +7,27 @@
 
     public static class ScheduleMaintenanceServices
     {
-        public static bool AddNewServiceRequest(BookingRequest requestInfo)
+        public static bool AddNewRequestPendingApproval(BookingRequest requestInfo)
         {
-            return MaintenanceServiceStore.AddNewServiceRequest(requestInfo);
+            return MaintenanceServiceStore.AddNewRequestPendingApproval(requestInfo);
         }
 
         public static BookingRequest ApproveRequest(string requestId)
         {
-            // we could add logic to keep track of available slots to book a service.
-            return MaintenanceServiceStore.ApproveRequestIfFound(requestId);
+            return MaintenanceServiceStore.ChangeRequestStateIfFound(requestId, RequestStatuses.ApprovedAndWaitingDelivery);
         }
 
-        public static IEnumerable<BookingRequest> GetAllPendingRequests()
+        public static BookingRequest FinalizeRequest(string requestId)
+        {
+            return MaintenanceServiceStore.ChangeRequestStateIfFound(requestId, RequestStatuses.Delivered);
+        }
+
+        public static IEnumerable<BookingRequest> GetAllRequests()
+        {
+            return MaintenanceServiceStore.GetAllRequests();
+        }
+
+        public static IEnumerable<BookingRequest> GetAllPendingApprovalRequests()
         {
             return MaintenanceServiceStore.GetRequestsWithStatus(RequestStatuses.PendingApproval);
         }

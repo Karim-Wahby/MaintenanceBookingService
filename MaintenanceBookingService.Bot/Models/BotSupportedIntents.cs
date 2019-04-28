@@ -1,4 +1,4 @@
-﻿namespace MaintenanceBookingService.Models
+﻿namespace MaintenanceBookingService.Bot.Models
 {
     public enum BotSupportedIntents
     {

@@ -1,4 +1,4 @@
-﻿namespace MaintenanceBookingService.Models
+﻿namespace MaintenanceBookingService.Bot.Models
 {
     using Microsoft.Bot.Builder;
     using System;
@@ -14,6 +14,10 @@
 
         // Dialog name To Dialog State
         public Dictionary<string, string> DialogsStatuses { get; set; } = new Dictionary<string, string>();
+
+        public string NewUserMaintenanceServiceId = string.Empty;
+
+        public bool IsExpectingFeedBackFromUser = false;
 
         public bool WaitingForUserInput { get; set; } = false;
 

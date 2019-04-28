@@ -1,10 +1,10 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Dialogs.Utilities;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Dialogs.Utilities;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
 
     public class GettingServiceDeliveryLocationDialog : IStatelessDialog

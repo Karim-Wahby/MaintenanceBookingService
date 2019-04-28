@@ -1,6 +1,6 @@
-﻿namespace MaintenanceBookingService.Managers
+﻿namespace MaintenanceBookingService.Bot.Managers
 {
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
     using System;
     using System.Threading.Tasks;

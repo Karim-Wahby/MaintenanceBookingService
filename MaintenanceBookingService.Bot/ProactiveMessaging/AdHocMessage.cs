@@ -1,7 +1,7 @@
 ﻿namespace MaintenanceBookingService.Bot.ProactiveMessaging
 {
     using MaintenanceBookingService.Definitions;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Connector;
     using Microsoft.Bot.Schema;
     using System;
@@ -11,7 +11,7 @@
 
     public static class AdHocMessage
     {
-        public static async Task SendMessageAsync(ConversationChannelData userCommunicationChannelInfo, SupportedLanguage userPreferedLangue, Models.Message messageToSend, Models.MessageOption messgeOptions = null)
+        public static async Task SendMessageAsync(ConversationChannelData userCommunicationChannelInfo, SupportedLanguage userPreferedLangue, Models.Message messageToSend, Models.MessageOption messgeOptions = null, bool startNewConversation = false)
         {
             var userAccount = new ChannelAccount(userCommunicationChannelInfo.UserId, userCommunicationChannelInfo.UserName);
             var botAccount = new ChannelAccount(userCommunicationChannelInfo.BotId, userCommunicationChannelInfo.BotName);
@@ -19,7 +19,9 @@
 
             // Create a new message.
             IMessageActivity proactiveMessageActivity = Activity.CreateMessageActivity();
-            if (!string.IsNullOrEmpty(userCommunicationChannelInfo.ConversationId) && !string.IsNullOrEmpty(userCommunicationChannelInfo.ChannelId))
+            if (!string.IsNullOrEmpty(userCommunicationChannelInfo.ConversationId) 
+                && !string.IsNullOrEmpty(userCommunicationChannelInfo.ChannelId)
+                && !startNewConversation)
             {
                 // If conversation ID and channel ID was stored previously, use it.
                 proactiveMessageActivity.ChannelId = userCommunicationChannelInfo.ChannelId;
@@ -35,10 +37,45 @@
             proactiveMessageActivity.From = botAccount;
             proactiveMessageActivity.Recipient = userAccount;
             proactiveMessageActivity.Conversation = new ConversationAccount(id: userCommunicationChannelInfo.ConversationId);
+            InitializeMessage(proactiveMessageActivity, userPreferedLangue, messageToSend, messgeOptions);
+            
 
-            proactiveMessageActivity.Text = GetMessageString(userPreferedLangue, messageToSend, messgeOptions);
-            proactiveMessageActivity.Locale = "en-us";
             await connector.Conversations.SendToConversationAsync((Activity)proactiveMessageActivity);
+        }
+
+        private static void InitializeMessage(
+            IMessageActivity proactiveMessageActivity, 
+            SupportedLanguage userPreferedLangue,
+            Message messageToSend, 
+            MessageOption messgeFormattingOptions = null, 
+            MessageOption ExtraMessageOptions = null)
+        {
+            proactiveMessageActivity.Text = GetMessageString(userPreferedLangue, messageToSend, messgeFormattingOptions);
+            var messageOptions = GetMessageOptions(userPreferedLangue, messageToSend, ExtraMessageOptions);
+
+            if (messageOptions != null && messageOptions.Any())
+            {
+                proactiveMessageActivity.SuggestedActions = new SuggestedActions()
+                {
+                    Actions = messageOptions
+                    .Select(option => new CardAction() { Title = option, Type = ActionTypes.ImBack, Value = option })
+                    .ToList()
+                };
+            }
+        }
+
+        private static IEnumerable<string> GetMessageOptions(SupportedLanguage userPreferedLangue, Message messageToSend, MessageOption extraMessageOptions)
+        {
+            MessageOption combinedOptions = MessageOption.CombineOptions(messageToSend?.Options, extraMessageOptions);
+            switch (userPreferedLangue)
+            {
+                case SupportedLanguage.English:
+                    return combinedOptions?.English;
+                case SupportedLanguage.Arabic:
+                    return combinedOptions?.Arabic;
+                default:
+                    return combinedOptions?.English;
+            }
         }
 
         private static string GetMessageString(SupportedLanguage userPreferedLangue, Message messageToSend, MessageOption messgeOptions)

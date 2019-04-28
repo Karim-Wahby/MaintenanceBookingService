@@ -1,6 +1,5 @@
-﻿using MaintenanceBookingService.Definitions;
-
-namespace MaintenanceBookingService.Dialogs
+﻿
+namespace MaintenanceBookingService.Bot.Dialogs
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +9,9 @@ namespace MaintenanceBookingService.Dialogs
     using System.Threading;
     using System.Threading.Tasks;
     using MaintenanceBookingService.Definitions;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Dialogs.Utilities;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Dialogs.Utilities;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
     using Newtonsoft.Json;
 
@@ -30,10 +29,10 @@ namespace MaintenanceBookingService.Dialogs
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.ApprovalOptionValues))
             {
-                var newRequestId = await PostTheUserRequest();
-                if (!string.IsNullOrWhiteSpace(newRequestId))
+                var newMaintenanceServiceRequestId = await PostMaintenanceServiceRequestForTheUser();
+                if (!string.IsNullOrWhiteSpace(newMaintenanceServiceRequestId))
                 {
-                    var requestIdAsOption = new string[] { newRequestId };
+                    var requestIdAsOption = new string[] { newMaintenanceServiceRequestId };
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.RequestSupmittedMessage,
                         this.userProfile,
@@ -45,6 +44,12 @@ namespace MaintenanceBookingService.Dialogs
                                 Arabic  = requestIdAsOption
                             }
                         );
+
+                    ClearServiceBookingForm();
+                    ResetUserIntentFromDialog();
+                    this.conversationData.NewUserMaintenanceServiceId = newMaintenanceServiceRequestId;
+                    this.conversationData.IsExpectingFeedBackFromUser = true;
+                    this.conversationData.SetWaitingForUserInputFlag(false);
                 }
                 else
                 {
@@ -108,11 +113,21 @@ namespace MaintenanceBookingService.Dialogs
             }
         }
 
-        private async Task<string> PostTheUserRequest()
+        private void ResetUserIntentFromDialog()
+        {
+            this.conversationData.CurrentConversationIntent = null;
+    }
+
+        private void ClearServiceBookingForm()
+        {
+            this.conversationData.ServiceBookingForm = new MaintenanceBookingServiceForm();
+        }
+
+        private async Task<string> PostMaintenanceServiceRequestForTheUser()
         {
             var userFilledFormValues = this.conversationData.ServiceBookingForm;
 
-            var userRequestedDelivaryDate = new DateTime(
+            var userRequestedDelivaryDate = new System.DateTime(
                     userFilledFormValues.Year.Value,
                     userFilledFormValues.Month.Value,
                     userFilledFormValues.Day.Value,

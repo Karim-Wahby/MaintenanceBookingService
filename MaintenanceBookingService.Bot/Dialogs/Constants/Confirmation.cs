@@ -1,7 +1,7 @@
-﻿namespace MaintenanceBookingService.Dialogs.Constants
+﻿namespace MaintenanceBookingService.Bot.Dialogs.Constants
 {
-    using MaintenanceBookingService.Dialogs.Definitions;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Definitions;
+    using MaintenanceBookingService.Bot.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;

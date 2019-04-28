@@ -1,9 +1,9 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs.DateTimeDialogs
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
 
     public class GetHourDialog : IStatelessDialog

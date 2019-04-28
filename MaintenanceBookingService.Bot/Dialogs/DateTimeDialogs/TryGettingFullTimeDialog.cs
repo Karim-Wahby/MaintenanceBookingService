@@ -1,7 +1,7 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs.DateTimeDialogs
 {
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
     using Microsoft.Recognizers.Text;
     using Microsoft.Recognizers.Text.DateTime;
@@ -21,7 +21,7 @@
         {
             var userInput = Utilities.ConversationUtils.GetUserReply(turnContext);
             TimeSpan? userRequestedTime = null;
-            if (Utilities.DialogUtils.IsUserInputInOptions(userInput, Constants.ServiceFieldsMessages.AsSoonAsPossibleOptionValues))
+            if (Utilities.DialogUtils.IsUserInputInOptions(userInput, Dialogs.Constants.ServiceFieldsMessages.AsSoonAsPossibleOptionValues))
             {
                 var todayDateAndTime = DateTime.Now;
                 if (conversationData.ServiceBookingForm.Year > todayDateAndTime.Year ||
@@ -56,7 +56,7 @@
         public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
-                    Constants.ServiceFieldsMessages.ServiceDeliveryTimeMessage,
+                    Dialogs.Constants.ServiceFieldsMessages.ServiceDeliveryTimeMessage,
                     userProfile,
                     turnContext,
                     cancellationToken);

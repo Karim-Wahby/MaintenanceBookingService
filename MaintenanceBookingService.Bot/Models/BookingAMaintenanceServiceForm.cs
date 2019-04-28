@@ -1,4 +1,4 @@
-﻿namespace MaintenanceBookingService.Models
+﻿namespace MaintenanceBookingService.Bot.Models
 {
     using MaintenanceBookingService.Definitions;
     using System;

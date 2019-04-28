@@ -1,22 +1,19 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
-namespace MaintenanceBookingService
+﻿namespace MaintenanceBookingService.Bot
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using MaintenanceBookingService.Managers;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Managers;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Recognizers.Text;
     using Microsoft.Recognizers.Text.DateTime;
     using Microsoft.Bot.Builder;
     using Microsoft.Bot.Schema;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Dialogs;
-    using MaintenanceBookingService.Dialogs.Utilities;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Dialogs;
+    using MaintenanceBookingService.Bot.Dialogs.Utilities;
 
     /// <summary>
     /// Represents a bot that processes incoming activities.
@@ -74,7 +71,7 @@ namespace MaintenanceBookingService
         private async Task HandleDeleteUserDataRequest(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             await conversationStateDataAccessor.DeleteUserCachedData(turnContext);
-            await Dialogs.Utilities.ConversationUtils.SendMessage("User Data Deleted (Y)!", turnContext, cancellationToken);
+            await ConversationUtils.SendMessage("User Data Deleted (Y)!", turnContext, cancellationToken);
         }
 
         private async Task HandleConverstationUpdate(ITurnContext turnContext, CancellationToken cancellationToken)
@@ -141,7 +138,11 @@ namespace MaintenanceBookingService
                 throw new ArgumentNullException(nameof(conversationData));
             }
 
-            if (!userProfile.PreferredLanguage.HasValue)
+            if (conversationData.IsExpectingFeedBackFromUser)
+            {
+                return new GettingUserFeedBackDialog(conversationData, userProfile);
+            }
+            else if (!userProfile.PreferredLanguage.HasValue)
             {
                 return new GreetingAndLanguageSelectionDialog(conversationData, userProfile);
             }
@@ -159,6 +160,8 @@ namespace MaintenanceBookingService
             }
 
             // fallback dialog
+            // TODO: add telemitry To indicate invalid dialog state.
+            // also fallback to human
             return new GreetingAndLanguageSelectionDialog(conversationData, userProfile);
         }
 

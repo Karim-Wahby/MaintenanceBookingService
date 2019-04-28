@@ -1,8 +1,8 @@
-﻿namespace MaintenanceBookingService.Dialogs.Utilities
+﻿namespace MaintenanceBookingService.Bot.Dialogs.Utilities
 {
     using MaintenanceBookingService.Definitions;
-    using MaintenanceBookingService.Dialogs.Definitions;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Definitions;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
     using Microsoft.Bot.Schema;
     using System;

@@ -1,4 +1,4 @@
-﻿namespace MaintenanceBookingService.Dialogs.Utilities
+﻿namespace MaintenanceBookingService.Bot.Dialogs.Utilities
 {
     using Microsoft.Recognizers.Text;
     using Microsoft.Recognizers.Text.DateTime;

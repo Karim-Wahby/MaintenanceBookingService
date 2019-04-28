@@ -1,10 +1,10 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using MaintenanceBookingService.Dialogs.Definitions;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Definitions;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
 
     public class GettingRequiredServiceDeliveryTimeDialog : IStatefulDialog<GettingServiceDeliveryTimeStatuses>
@@ -35,11 +35,11 @@
             switch (this.currentDialogStatus)
             {
                 case GettingServiceDeliveryTimeStatuses.GettingDate:
-                    return new GetDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetDateDialog(conversationData, userProfile);
                 case GettingServiceDeliveryTimeStatuses.GettingTime:
-                    return new GetTimeDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetTimeDialog(conversationData, userProfile);
                 default:
-                    return new GetDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetDateDialog(conversationData, userProfile);
             }
         }
     }

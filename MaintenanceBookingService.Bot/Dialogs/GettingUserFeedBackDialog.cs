@@ -1,14 +1,15 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Dialogs.Utilities;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
 
-    public class GetMonthDialog : IStatelessDialog
+    public class GettingUserFeedBackDialog : IStatelessDialog
     {
-        public GetMonthDialog(ConversationData conversationData, UserData userProfile)
+        public GettingUserFeedBackDialog(ConversationData conversationData, UserData userProfile) 
             : base(conversationData, userProfile)
         {
         }

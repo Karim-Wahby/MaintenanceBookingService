@@ -1,4 +1,4 @@
-﻿namespace MaintenanceBookingService.Dialogs.Interfaces
+﻿namespace MaintenanceBookingService.Bot.Dialogs.Interfaces
 {
     using Microsoft.Bot.Builder;
     using System;

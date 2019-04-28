@@ -12,7 +12,7 @@
     {
         // GET: api/<controller>
         [HttpPost]
-        [Route("api/UpdateCustomerWithHisRequestStatus/")]
+        [Route("api/UpdateCustomerWithHisRequestStatus/RequestApproved")]
         public async Task RequestApprovedAsync([FromBody]BookingRequest request)
         {
             var messageOptions = new string[]
@@ -30,6 +30,29 @@
                     Arabic = messageOptions,
                     English = messageOptions
                 });
+        }
+
+        // GET: api/<controller>
+        [HttpPost]
+        [Route("api/UpdateCustomerWithHisRequestStatus/RequestDelivered")]
+        public async Task RequestDeliveredAsync([FromBody]BookingRequest request)
+        {
+            var messageOptions = new string[]
+                {
+                    request.Id,
+                    request.DescriptionOfRequiredService
+                };
+
+            await AdHocMessage.SendMessageAsync(
+                request.ConversationChannelData,
+                request.UserPreferredLanguage,
+                Dialogs.Constants.RequestStatusUpdate.ServiceRequestDeliveredMessage,
+                new Models.MessageOption()
+                {
+                    Arabic = messageOptions,
+                    English = messageOptions
+                },
+                startNewConversation: true);
         }
     }
 }

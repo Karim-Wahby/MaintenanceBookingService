@@ -1,4 +1,4 @@
-﻿namespace MaintenanceBookingService.Dialogs.Definitions
+﻿namespace MaintenanceBookingService.Bot.Dialogs.Definitions
 {
     using System;
     using System.Collections.Generic;

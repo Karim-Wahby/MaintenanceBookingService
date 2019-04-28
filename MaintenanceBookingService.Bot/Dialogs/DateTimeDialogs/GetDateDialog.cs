@@ -1,8 +1,8 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿namespace MaintenanceBookingService.Bot.Dialogs.DateTimeDialogs
 {
-    using MaintenanceBookingService.Dialogs.Definitions;
-    using MaintenanceBookingService.Dialogs.Interfaces;
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Dialogs.Definitions;
+    using MaintenanceBookingService.Bot.Dialogs.Interfaces;
+    using MaintenanceBookingService.Bot.Models;
 
     public class GetDateDialog : IStatefulDialog<GettingDateStatuses>
     {
@@ -40,15 +40,15 @@
             switch (this.currentDialogStatus)
             {
                 case GettingDateStatuses.TryingGettingFullDate:
-                    return new TryGettingFullDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.TryGettingFullDateDialog(conversationData, userProfile);
                 case GettingDateStatuses.GettingDay:
-                    return new GetDayDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetDayDialog(conversationData, userProfile);
                 case GettingDateStatuses.GettingMonth:
-                    return new GetMonthDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetMonthDialog(conversationData, userProfile);
                 case GettingDateStatuses.GettingYear:
-                    return new GetYearDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetYearDialog(conversationData, userProfile);
                 default:
-                    return new TryGettingFullDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.TryGettingFullDateDialog(conversationData, userProfile);
             }
         }
     }

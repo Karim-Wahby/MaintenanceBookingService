@@ -1,6 +1,6 @@
-﻿namespace MaintenanceBookingService.Dialogs.Interfaces
+﻿namespace MaintenanceBookingService.Bot.Dialogs.Interfaces
 {
-    using MaintenanceBookingService.Models;
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
     using System;
     using System.Threading;

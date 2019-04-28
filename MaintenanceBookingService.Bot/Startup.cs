@@ -1,19 +1,19 @@
-﻿using System;
-using System.Linq;
-using MaintenanceBookingService.Managers;
-using MaintenanceBookingService.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.Bot.Configuration;
-using Microsoft.Bot.Connector.Authentication;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace MaintenanceBookingService
+﻿namespace MaintenanceBookingService.Bot
 {
+    using System;
+    using System.Linq;
+    using MaintenanceBookingService.Bot.Managers;
+    using MaintenanceBookingService.Bot.Models;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Bot.Builder;
+    using Microsoft.Bot.Builder.Integration.AspNet.Core;
+    using Microsoft.Bot.Configuration;
+    using Microsoft.Bot.Connector.Authentication;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// The Startup class configures services and the request pipeline.
     /// </summary>

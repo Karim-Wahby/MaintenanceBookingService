@@ -34,7 +34,7 @@
             return ServiceRequests[GetRequestStatus(requestId)][requestId];
         }
 
-        public static bool AddNewServiceRequest(BookingRequest requestInfo)
+        public static bool AddNewRequestPendingApproval(BookingRequest requestInfo)
         {
             if (string.IsNullOrWhiteSpace(requestInfo.Id))
             {
@@ -70,49 +70,30 @@
             return true;
         }
 
-        public static BookingRequest ApproveRequestIfFound(string requestId)
+        public static BookingRequest ChangeRequestStateIfFound(string requestId, RequestStatuses newStatus)
         {
-            if (ServiceRequests[RequestStatuses.PendingApproval].ContainsKey(requestId))
+            try
             {
-                var approvedRequest = ServiceRequests[RequestStatuses.PendingApproval][requestId];
-                ServiceRequests[RequestStatuses.PendingApproval].Remove(requestId);
+                var currentRequestStatus = GetRequestStatus(requestId);
+                var currentRequest = ServiceRequests[currentRequestStatus][requestId];
+                ServiceRequests[currentRequestStatus].Remove(requestId);
 
-                if (ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery].ContainsKey(requestId))
+                if (ServiceRequests[newStatus].ContainsKey(requestId))
                 {
-                    ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery][requestId] = approvedRequest;
+                    ServiceRequests[newStatus][requestId] = currentRequest;
                 }
                 else
                 {
-                    ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery].Add(requestId, approvedRequest);
+                    ServiceRequests[newStatus].Add(requestId, currentRequest);
                 }
 
-                approvedRequest.Status = RequestStatuses.ApprovedAndWaitingDelivery;
-                return approvedRequest;
+                currentRequest.Status = newStatus;
+                return currentRequest;
             }
-
-            return null;
-        }
-
-        public static bool FinalizeRequestIfFound(string requestId)
-        {
-            if (ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery].ContainsKey(requestId))
+            catch (InvalidOperationException)
             {
-                var deliveredRequest = ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery][requestId];
-                ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery].Remove(requestId);
-
-                if (ServiceRequests[RequestStatuses.Delivered].ContainsKey(requestId))
-                {
-                    ServiceRequests[RequestStatuses.Delivered][requestId] = deliveredRequest;
-                }
-                else
-                {
-                    ServiceRequests[RequestStatuses.Delivered].Add(requestId, deliveredRequest);
-                }
-
-                return true;
+                return null;
             }
-
-            return false;
         }
 
         public static RequestStatuses GetRequestStatus(string requestId)
@@ -130,6 +111,11 @@
         public static IEnumerable<BookingRequest> GetRequestsWithStatus(RequestStatuses status)
         {
             return ServiceRequests[status].Values;
+        }
+
+        public static IEnumerable<BookingRequest> GetAllRequests()
+        {
+            return ServiceRequests.SelectMany(requestsWithStatus => requestsWithStatus.Value).Select(request => request.Value);
         }
 
         private static string GetNewServiceId()
