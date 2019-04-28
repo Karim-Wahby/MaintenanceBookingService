@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using MaintenanceBookingService.Definitions;
     using MaintenanceBookingService.Dialogs.Interfaces;
     using MaintenanceBookingService.Dialogs.Utilities;
     using MaintenanceBookingService.Models;

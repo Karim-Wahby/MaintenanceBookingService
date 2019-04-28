@@ -45,10 +45,17 @@
 
         [Route("api/MaintenanceServicesRequests/AddRequest")]
         [HttpPost]
-        public async Task<bool> AddRequest()
+        public async Task<string> AddRequest()
         {
             var request = await Request.Content.ReadAsAsync<BookingRequest>();
-            return ScheduleMaintenanceServices.AddNewServiceRequest(request);
+            if (ScheduleMaintenanceServices.AddNewServiceRequest(request))
+            {
+                return request.Id;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         [Route("api/MaintenanceServicesRequests/ApproveRequest/{id}")]

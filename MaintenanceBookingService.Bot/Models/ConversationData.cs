@@ -1,5 +1,6 @@
 ﻿namespace MaintenanceBookingService.Models
 {
+    using Microsoft.Bot.Builder;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,6 +19,12 @@
 
         public string BotId { get; set; } = string.Empty;
 
+        public string BotName { get; set; } = string.Empty;
+
+        public string ServiceUrl { get; set; } = string.Empty;
+
+        public string ConversationId { get; set; } = string.Empty;
+
         public static void SetWaitingForUserInputFlag(ConversationData conversationData, bool value = true)
         {
             conversationData.WaitingForUserInput = value;
@@ -26,6 +33,14 @@
         public void SetWaitingForUserInputFlag(bool value = true)
         {
             this.WaitingForUserInput = value;
+        }
+
+        public void InitializeConversationDataFromDialogContext(ITurnContext turnContext)
+        {
+            this.BotId = turnContext.Activity.Recipient.Id;
+            this.BotName = turnContext.Activity.Recipient.Name;
+            this.ServiceUrl = turnContext.Activity.ServiceUrl;
+            this.ConversationId = turnContext.Activity.Conversation.Id;
         }
     }
 }

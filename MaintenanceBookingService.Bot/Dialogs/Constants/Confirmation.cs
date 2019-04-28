@@ -46,8 +46,8 @@
 
         public static Message RequestSupmittedMessage = new Message()
         {
-            English = $"Your Service Request has been submitted, we will contact you soon",
-            Arabic = $"لقد تم تسلم تسلم طلبكم بنجاح, سنقوم بالتواصل معكم قريبا",
+            English = $"Your Service Request (ID: {{0}}) has been submitted, we will contact you soon",
+            Arabic = $"لقد تم تسلم تسلم طلبكم (رقم {{0}})بنجاح, سنقوم بالتواصل معكم قريبا",
         };
 
         public static Message FailedToSupmitRequestMessage = new Message()

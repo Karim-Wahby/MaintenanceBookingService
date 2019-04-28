@@ -30,13 +30,20 @@ namespace MaintenanceBookingService.Dialogs
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.ApprovalOptionValues))
             {
-                if (await PostTheUserRequest())
+                var newRequestId = await PostTheUserRequest();
+                if (!string.IsNullOrWhiteSpace(newRequestId))
                 {
+                    var requestIdAsOption = new string[] { newRequestId };
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.RequestSupmittedMessage,
                         this.userProfile,
                         turnContext,
-                        cancellationToken
+                        cancellationToken,
+                        formattingValues: new MessageOption()
+                            {
+                                English = requestIdAsOption,
+                                Arabic  = requestIdAsOption
+                            }
                         );
                 }
                 else
@@ -101,28 +108,38 @@ namespace MaintenanceBookingService.Dialogs
             }
         }
 
-        private async Task<bool> PostTheUserRequest()
+        private async Task<string> PostTheUserRequest()
         {
             var userFilledFormValues = this.conversationData.ServiceBookingForm;
-            var serviceBookingRequest = new BookingRequest(
-                userFilledFormValues.RequestedService.Value,
-                userFilledFormValues.RequiredServiceDescription,
-                userFilledFormValues.DeliveryLocation,
-                new DateTime(
+
+            var userRequestedDelivaryDate = new DateTime(
                     userFilledFormValues.Year.Value,
                     userFilledFormValues.Month.Value,
                     userFilledFormValues.Day.Value,
                     userFilledFormValues.Hour.Value,
                     userFilledFormValues.Minutes.Value,
-                    0),
-                this.userProfile.Name,
+                    0);
+
+            var conversationChannelData = new ConversationChannelData(
                 this.userProfile.Id,
+                this.userProfile.Name,
+                this.conversationData.BotId,
+                this.conversationData.BotName,
                 this.userProfile.ChannelId,
-                this.conversationData.BotId);
+                this.conversationData.ConversationId,
+                this.conversationData.ServiceUrl);
+
+            var serviceBookingRequest = new BookingRequest(
+                userFilledFormValues.RequestedService.Value,
+                userFilledFormValues.RequiredServiceDescription,
+                userFilledFormValues.DeliveryLocation,
+                userRequestedDelivaryDate,
+                conversationChannelData,
+                this.userProfile.PreferredLanguage.Value);
 
             var stringContent = new StringContent(JsonConvert.SerializeObject(serviceBookingRequest), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync("http://localhost:2614/api/MaintenanceServicesRequests/AddRequest/", stringContent);
-            return await response.Content.ReadAsAsync<bool>();
+            return await response.Content.ReadAsAsync<string>();
         }
 
         public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)

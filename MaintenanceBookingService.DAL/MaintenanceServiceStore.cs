@@ -26,7 +26,7 @@
 
         public static IEnumerable<BookingRequest> GetRequestWithUserId(string userId)
         {
-            return ServiceRequests.SelectMany(requestsWithStatuses => requestsWithStatuses.Value.Where(request => request.Value.UserId == userId).Select(request => request.Value));
+            return ServiceRequests.SelectMany(requestsWithStatuses => requestsWithStatuses.Value.Where(request => request.Value.ConversationChannelData.UserId == userId).Select(request => request.Value));
         }
 
         public static BookingRequest GetRequestWithId(string requestId)

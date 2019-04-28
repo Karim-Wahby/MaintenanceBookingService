@@ -8,13 +8,9 @@
     {
         public string Id { get; set; } = string.Empty;
 
-        public string UserName { get; set; } = string.Empty;
+        public ConversationChannelData ConversationChannelData { get; set; } = null;
 
-        public string UserId { get; set; } = string.Empty;
-
-        public string ChannelId { get; set; } = string.Empty;
-
-        public string BotId { get; set; } = string.Empty;
+        public SupportedLanguage UserPreferredLanguage { get; set; }
 
         public int? Rating { get; set; } = null;
 
@@ -38,11 +34,9 @@
             string descriptionOfRequiredService,
             string deliveryLocation,
             DateTime timeOfServiceDelivery,
-            string userName,
-            string userId,
-            string channelId,
-            string botId)
-            : this(maintenanceServiceNeeded, descriptionOfRequiredService, deliveryLocation, timeOfServiceDelivery, userName, userId, channelId, botId)
+            ConversationChannelData conversationChannelData,
+            SupportedLanguage userPreferredLanguage)
+            : this(maintenanceServiceNeeded, descriptionOfRequiredService, deliveryLocation, timeOfServiceDelivery, conversationChannelData, userPreferredLanguage)
         {
             this.SetRequestId(identifier);
         }
@@ -52,15 +46,11 @@
             string descriptionOfRequiredService, 
             string deliveryLocation, 
             DateTime timeOfServiceDelivery,
-            string userName,
-            string userId,
-            string channelId,
-            string botId)
+            ConversationChannelData conversationChannelData,
+            SupportedLanguage userPreferredLanguage)
         {
-            this.UserName = userName;
-            this.UserId = userId;
-            this.ChannelId = channelId;
-            this.BotId = botId;
+            this.UserPreferredLanguage = userPreferredLanguage;
+            this.ConversationChannelData = conversationChannelData ?? throw new ArgumentNullException(nameof(conversationChannelData));
             this.DeliveryLocation = deliveryLocation ?? throw new ArgumentNullException(nameof(deliveryLocation));
             this.MaintenanceServiceNeeded = maintenanceServiceNeeded;
             this.TimeOfServiceDelivery = timeOfServiceDelivery;

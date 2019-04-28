@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MaintenanceBookingService.Definitions;
+using Microsoft.Bot.Builder;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +15,16 @@ namespace MaintenanceBookingService.Models
 
         public string ChannelId { get; set; } = string.Empty;
 
-        public string ConversationId { get; set; } = string.Empty;
-
         public SupportedLanguage? PreferredLanguage { get; set; } = null;
 
         // public string HomeAddress { get; set; } = string.Empty;
         // public string PhoneNumber { get; set; } = string.Empty;
+
+        public void InitializeConversationDataFromDialogContext(ITurnContext turnContext)
+        {
+            this.Name = turnContext.Activity.From.Name;
+            this.Id = turnContext.Activity.From.Id;
+            this.ChannelId = turnContext.Activity.ChannelId;
+        }
     }
 }
