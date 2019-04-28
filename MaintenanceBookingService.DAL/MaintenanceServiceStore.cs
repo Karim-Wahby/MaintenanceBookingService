@@ -23,7 +23,17 @@
             ServiceRequests.Add(RequestStatuses.ApprovedAndWaitingDelivery, new Dictionary<string, BookingRequest>());
             ServiceRequests.Add(RequestStatuses.Delivered, new Dictionary<string, BookingRequest>());
         }
-        
+
+        public static IEnumerable<BookingRequest> GetRequestWithUserId(string userId)
+        {
+            return ServiceRequests.SelectMany(requestsWithStatuses => requestsWithStatuses.Value.Where(request => request.Value.UserId == userId).Select(request => request.Value));
+        }
+
+        public static BookingRequest GetRequestWithId(string requestId)
+        {
+            return ServiceRequests[GetRequestStatus(requestId)][requestId];
+        }
+
         public static bool AddNewServiceRequest(BookingRequest requestInfo)
         {
             if (string.IsNullOrWhiteSpace(requestInfo.Id))
@@ -39,6 +49,7 @@
             else
             {
                 ServiceRequests[RequestStatuses.PendingApproval].Add(requestInfo.Id, requestInfo);
+                requestInfo.Status = RequestStatuses.PendingApproval;
                 return true;
             }
         }
@@ -75,6 +86,7 @@
                     ServiceRequests[RequestStatuses.ApprovedAndWaitingDelivery].Add(requestId, approvedRequest);
                 }
 
+                approvedRequest.Status = RequestStatuses.ApprovedAndWaitingDelivery;
                 return true;
             }
 

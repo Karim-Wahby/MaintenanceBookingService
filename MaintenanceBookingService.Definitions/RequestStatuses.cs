@@ -2,6 +2,7 @@
 {
     public enum RequestStatuses
     {
+        NotSpecified,
         PendingApproval,
         ApprovedAndWaitingDelivery,
         Delivered

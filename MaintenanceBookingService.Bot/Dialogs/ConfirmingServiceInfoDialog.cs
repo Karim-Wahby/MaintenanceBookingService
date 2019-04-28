@@ -1,15 +1,25 @@
-﻿namespace MaintenanceBookingService.Dialogs
+﻿using MaintenanceBookingService.Definitions;
+
+namespace MaintenanceBookingService.Dialogs
 {
     using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using MaintenanceBookingService.Definitions;
     using MaintenanceBookingService.Dialogs.Interfaces;
     using MaintenanceBookingService.Dialogs.Utilities;
     using MaintenanceBookingService.Models;
     using Microsoft.Bot.Builder;
+    using Newtonsoft.Json;
 
     public class ConfirmingServiceInfoDialog : IStatelessDialog
     {
+        private static readonly HttpClient httpClient = new HttpClient();
+
         public ConfirmingServiceInfoDialog(ConversationData conversationData, UserData userProfile)
             : base(conversationData, userProfile)
         {
@@ -20,13 +30,24 @@
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.ApprovalOptionValues))
             {
-                
-                await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
-                    Constants.Confirmation.RequestSupmittedMessage,
-                    this.userProfile,
-                    turnContext,
-                    cancellationToken
-                    );
+                if (await PostRequest())
+                {
+                    await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                        Constants.Confirmation.RequestSupmittedMessage,
+                        this.userProfile,
+                        turnContext,
+                        cancellationToken
+                        );
+                }
+                else
+                {
+                    await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                        Constants.Confirmation.FailedToSupmitRequestMessage,
+                        this.userProfile,
+                        turnContext,
+                        cancellationToken
+                        );
+                }
             }
             else
             {
@@ -80,6 +101,33 @@
             }
         }
 
+        private async Task<bool> PostRequest()
+        {
+            var userFilledFormValues = this.conversationData.ServiceBookingForm;
+            var serviceBookingRequest = new bookingRequestObjectClass()
+            {
+                bookingRequestObject = new BookingRequest(
+                userFilledFormValues.RequestedService.Value,
+                userFilledFormValues.RequiredServiceDescription,
+                userFilledFormValues.DeliveryLocation,
+                new DateTime(
+                    userFilledFormValues.Year.Value,
+                    userFilledFormValues.Month.Value,
+                    userFilledFormValues.Day.Value,
+                    userFilledFormValues.Hour.Value,
+                    userFilledFormValues.Minutes.Value,
+                    0),
+                this.userProfile.Name,
+                this.userProfile.Id,
+                this.userProfile.ChannelId,
+                this.conversationData.BotId)
+            };
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(serviceBookingRequest.bookingRequestObject), Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://localhost:2614/api/MaintenanceServicesRequests/AddRequest/", stringContent);
+            return await response.Content.ReadAsAsync<bool>();
+        }
+
         public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             var formRepresentation = new string[]
@@ -88,11 +136,11 @@
                 };
 
             var formValuesStringRepresentation = new MessageOption()
-                {
-                    English = formRepresentation,
-                    Arabic = formRepresentation
-                };
-            
+            {
+                English = formRepresentation,
+                Arabic = formRepresentation
+            };
+
             await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.ConfirmationMessage,
                         this.userProfile,
@@ -102,5 +150,10 @@
 
             conversationData.SetWaitingForUserInputFlag(true);
         }
+    }
+
+    internal class bookingRequestObjectClass
+    {
+        public BookingRequest bookingRequestObject;
     }
 }

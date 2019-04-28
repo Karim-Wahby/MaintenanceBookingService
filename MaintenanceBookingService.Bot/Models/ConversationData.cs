@@ -16,6 +16,8 @@
 
         public bool WaitingForUserInput { get; set; } = false;
 
+        public string BotId { get; set; } = string.Empty;
+
         public static void SetWaitingForUserInputFlag(ConversationData conversationData, bool value = true)
         {
             conversationData.WaitingForUserInput = value;

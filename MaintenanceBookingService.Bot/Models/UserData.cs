@@ -8,6 +8,13 @@ namespace MaintenanceBookingService.Models
     public class UserData
     {
         public string Name { get; set; } = string.Empty;
+
+        public string Id { get; set; } = string.Empty;
+
+        public string ChannelId { get; set; } = string.Empty;
+
+        public string ConversationId { get; set; } = string.Empty;
+
         public SupportedLanguage? PreferredLanguage { get; set; } = null;
 
         // public string HomeAddress { get; set; } = string.Empty;

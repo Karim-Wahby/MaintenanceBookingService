@@ -50,6 +50,11 @@
             Arabic = $"لقد تم تسلم تسلم طلبكم بنجاح, سنقوم بالتواصل معكم قريبا",
         };
 
+        public static Message FailedToSupmitRequestMessage = new Message()
+        {
+            English = $"Sorry, We failed to submit Your Service Request, There Seems to be a problem, please try again later",
+            Arabic = $"نتاسف, يبدو ان هناك خطا ما حدث اثناء تقديم طلبكم رجاء حاول مره اخرى",
+        };
 
         public static HashSet<string> ApprovalOptionValues = new HashSet<string>() { "looks good!", "يبدو جيدا!" };
         public static HashSet<string> RequiredServicenAdjustmentOptionValues = new HashSet<string>() { "تعديل الخدمه المطلوبه", "adjust requested service" };

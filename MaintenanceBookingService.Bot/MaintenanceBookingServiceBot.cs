@@ -175,12 +175,11 @@ namespace MaintenanceBookingService
             {
                 var userProfile = await conversationStateDataAccessor.GetUserData(turnContext);
                 var conversationData = await conversationStateDataAccessor.GetConversationData(turnContext);
-                userProfile.Name = member.Name;
-
-                if (string.IsNullOrWhiteSpace(userProfile.Name))
-                {
-                    userProfile.Name = member.Id;
-                }
+                userProfile.Name = turnContext.Activity.From.Name;
+                userProfile.Id = turnContext.Activity.From.Id;
+                userProfile.ChannelId = turnContext.Activity.ChannelId;
+                userProfile.ConversationId = turnContext.Activity.Conversation.Id;
+                conversationData.BotId = turnContext.Activity.Recipient.Id;
 
                 await GetSuitableDialog(userProfile, conversationData).StartAsync(turnContext, cancellationToken);
 
