@@ -8,11 +8,14 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Http;
 
     public class MaintenanceServicesRequestsController : ApiController
     {
+        private static readonly HttpClient httpClient = new HttpClient();
+
         [Route("api/MaintenanceServicesRequests/")]
         [HttpGet]
         public IEnumerable<BookingRequest> GetAllRequests()
@@ -22,7 +25,7 @@
 
         [Route("api/MaintenanceServicesRequests/UserRequests/{userId}")]
         [HttpGet]
-        public IEnumerable<BookingRequest> GetAddUserRequests(string userId)
+        public IEnumerable<BookingRequest> GetUserRequests(string userId)
         {
             return ScheduleMaintenanceServices.GetRequestWithUserId(userId);
         }
@@ -50,9 +53,17 @@
 
         [Route("api/MaintenanceServicesRequests/ApproveRequest/{id}")]
         [HttpGet]
-        public bool ApproveRequest(string id)
+        public async Task<bool> ApproveRequestAsync(string id)
         {
-            return ScheduleMaintenanceServices.ApproveRequest(id);
+            var approvedRequest = ScheduleMaintenanceServices.ApproveRequest(id);
+            if (approvedRequest != null)
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(approvedRequest), Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync("http://localhost:3978/api/UpdateCustomerWithHisRequestStatus/", stringContent);
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+
+            return false;
         }
     }
 }

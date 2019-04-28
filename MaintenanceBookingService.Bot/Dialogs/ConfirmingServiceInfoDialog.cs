@@ -30,7 +30,7 @@ namespace MaintenanceBookingService.Dialogs
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.ApprovalOptionValues))
             {
-                if (await PostRequest())
+                if (await PostTheUserRequest())
                 {
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.RequestSupmittedMessage,
@@ -101,12 +101,10 @@ namespace MaintenanceBookingService.Dialogs
             }
         }
 
-        private async Task<bool> PostRequest()
+        private async Task<bool> PostTheUserRequest()
         {
             var userFilledFormValues = this.conversationData.ServiceBookingForm;
-            var serviceBookingRequest = new bookingRequestObjectClass()
-            {
-                bookingRequestObject = new BookingRequest(
+            var serviceBookingRequest = new BookingRequest(
                 userFilledFormValues.RequestedService.Value,
                 userFilledFormValues.RequiredServiceDescription,
                 userFilledFormValues.DeliveryLocation,
@@ -120,10 +118,9 @@ namespace MaintenanceBookingService.Dialogs
                 this.userProfile.Name,
                 this.userProfile.Id,
                 this.userProfile.ChannelId,
-                this.conversationData.BotId)
-            };
+                this.conversationData.BotId);
 
-            var stringContent = new StringContent(JsonConvert.SerializeObject(serviceBookingRequest.bookingRequestObject), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(serviceBookingRequest), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync("http://localhost:2614/api/MaintenanceServicesRequests/AddRequest/", stringContent);
             return await response.Content.ReadAsAsync<bool>();
         }
@@ -150,10 +147,5 @@ namespace MaintenanceBookingService.Dialogs
 
             conversationData.SetWaitingForUserInputFlag(true);
         }
-    }
-
-    internal class bookingRequestObjectClass
-    {
-        public BookingRequest bookingRequestObject;
     }
 }

@@ -4,6 +4,7 @@ using MaintenanceBookingService.Managers;
 using MaintenanceBookingService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Configuration;
@@ -62,6 +63,9 @@ namespace MaintenanceBookingService
                     userState.CreateProperty<UserData>(ConversationStateDataAccessors.UserDataName));
             });
 
+            services.AddMvc()
+                    .AddControllersAsServices();
+
             services.AddBot<MaintenanceBookingServiceBot>(options =>
             {
                 var secretKey = Configuration.GetSection("botFileSecret")?.Value;
@@ -92,6 +96,7 @@ namespace MaintenanceBookingService
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles()
                 .UseStaticFiles()
                 .UseBotFramework();

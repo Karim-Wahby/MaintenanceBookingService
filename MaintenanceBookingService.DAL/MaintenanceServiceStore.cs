@@ -70,7 +70,7 @@
             return true;
         }
 
-        public static bool ApproveRequestIfFound(string requestId)
+        public static BookingRequest ApproveRequestIfFound(string requestId)
         {
             if (ServiceRequests[RequestStatuses.PendingApproval].ContainsKey(requestId))
             {
@@ -87,10 +87,10 @@
                 }
 
                 approvedRequest.Status = RequestStatuses.ApprovedAndWaitingDelivery;
-                return true;
+                return approvedRequest;
             }
 
-            return false;
+            return null;
         }
 
         public static bool FinalizeRequestIfFound(string requestId)

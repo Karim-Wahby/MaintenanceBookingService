@@ -6,7 +6,7 @@
 
     public class BookingRequest
     {
-        public string Id { get; private set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         public string UserName { get; set; } = string.Empty;
 
