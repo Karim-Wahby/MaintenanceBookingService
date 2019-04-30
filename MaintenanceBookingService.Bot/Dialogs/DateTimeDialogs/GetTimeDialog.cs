@@ -13,19 +13,19 @@
 
         protected override void DetermineWhatShouldtheCurrentDialogStatusBe()
         {
-            if (!this.conversationData.ServiceBookingForm.FailedToRecognizeProvidedTime)
+            if (!this.ConversationData.ServiceBookingForm.FailedToRecognizeProvidedTime)
             {
                 this.SetCurrentDialogStatus(GettingTimeStatuses.TryingGettingFullTime);
             }
-            else if (!this.conversationData.ServiceBookingForm.Hour.HasValue)
+            else if (!this.ConversationData.ServiceBookingForm.Hour.HasValue)
             {
                 this.SetCurrentDialogStatus(GettingTimeStatuses.GettingHour);
             }
-            else if (!this.conversationData.ServiceBookingForm.Minutes.HasValue)
+            else if (!this.ConversationData.ServiceBookingForm.Minutes.HasValue)
             {
                 this.SetCurrentDialogStatus(GettingTimeStatuses.GettingMinute);
             }
-            else if (string.IsNullOrWhiteSpace(this.conversationData.ServiceBookingForm.DayOrNight))
+            else if (string.IsNullOrWhiteSpace(this.ConversationData.ServiceBookingForm.DayOrNight))
             {
                 this.SetCurrentDialogStatus(GettingTimeStatuses.GettingPartOfDay);
             }
@@ -40,15 +40,15 @@
             switch (this.currentDialogStatus)
             {
                 case GettingTimeStatuses.TryingGettingFullTime:
-                    return new TryGettingFullTimeDialog(conversationData, userProfile);
+                    return new TryGettingFullTimeDialog(ConversationData, UserProfile);
                 case GettingTimeStatuses.GettingHour:
-                    return new GetHourDialog(conversationData, userProfile);
+                    return new GetHourDialog(ConversationData, UserProfile);
                 case GettingTimeStatuses.GettingMinute:
-                    return new GetMinuteDialog(conversationData, userProfile);
+                    return new GetMinuteDialog(ConversationData, UserProfile);
                 case GettingTimeStatuses.GettingPartOfDay:
-                    return new GetPartOfDayDialog(conversationData, userProfile);
+                    return new GetPartOfDayDialog(ConversationData, UserProfile);
                 default:
-                    return new TryGettingFullTimeDialog(conversationData, userProfile);
+                    return new TryGettingFullTimeDialog(ConversationData, UserProfile);
             }
         }
     }

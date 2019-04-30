@@ -13,21 +13,21 @@
 
         protected override void DetermineWhatShouldtheCurrentDialogStatusBe()
         {
-            if (!this.conversationData.ServiceBookingForm.FailedToRecognizeProvidedDate)
+            if (!this.ConversationData.ServiceBookingForm.FailedToRecognizeProvidedDate)
             {
                 this.SetCurrentDialogStatus(GettingDateStatuses.TryingGettingFullDate);
             }
-            else if (!this.conversationData.ServiceBookingForm.Day.HasValue)
+            else if (!this.ConversationData.ServiceBookingForm.Year.HasValue)
             {
-                this.SetCurrentDialogStatus(GettingDateStatuses.GettingDay);
+                this.SetCurrentDialogStatus(GettingDateStatuses.GettingYear);
             }
-            else if (!this.conversationData.ServiceBookingForm.Month.HasValue)
+            else if (!this.ConversationData.ServiceBookingForm.Month.HasValue)
             {
                 this.SetCurrentDialogStatus(GettingDateStatuses.GettingMonth);
             }
-            else if (!this.conversationData.ServiceBookingForm.Year.HasValue)
+            else if (!this.ConversationData.ServiceBookingForm.Day.HasValue)
             {
-                this.SetCurrentDialogStatus(GettingDateStatuses.GettingYear);
+                this.SetCurrentDialogStatus(GettingDateStatuses.GettingDay);
             }
             else
             {
@@ -40,15 +40,15 @@
             switch (this.currentDialogStatus)
             {
                 case GettingDateStatuses.TryingGettingFullDate:
-                    return new DateTimeDialogs.TryGettingFullDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.TryGettingFullDateDialog(ConversationData, UserProfile);
                 case GettingDateStatuses.GettingDay:
-                    return new DateTimeDialogs.GetDayDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetDayDialog(ConversationData, UserProfile);
                 case GettingDateStatuses.GettingMonth:
-                    return new DateTimeDialogs.GetMonthDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetMonthDialog(ConversationData, UserProfile);
                 case GettingDateStatuses.GettingYear:
-                    return new DateTimeDialogs.GetYearDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetYearDialog(ConversationData, UserProfile);
                 default:
-                    return new DateTimeDialogs.TryGettingFullDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.TryGettingFullDateDialog(ConversationData, UserProfile);
             }
         }
     }

@@ -22,11 +22,11 @@
         public static bool TryGetDateFromUserInput(string userInput, out DateTime? userRequestedDate)
         {
             DateTime datetimeDump = default(DateTime);
+            userRequestedDate = null;
             var managedToRecognize = GetDateOrTimeFromUserInput(userInput, UserDateTimeValueOptions.Date, out datetimeDump);
-            userRequestedDate = datetimeDump;
 
             // the returned formate is in mm/dd/yyyy not in dd/mm/yyyy so we need to switch day and month if possible
-            if (TryReplaceDayWithMonthInRecognizedDate(userRequestedDate, out datetimeDump))
+            if (managedToRecognize && TryReplaceDayWithMonthInRecognizedDate(userRequestedDate, out datetimeDump))
             {
                 userRequestedDate = datetimeDump;
             }

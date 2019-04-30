@@ -19,19 +19,19 @@
 
         protected override void DetermineWhatShouldtheCurrentDialogStatusBe()
         {
-            if (conversationData.ServiceBookingForm.RequestedService == null)
+            if (ConversationData.ServiceBookingForm.RequestedService == null)
             {
                 SetCurrentDialogStatus(MaintenanceBookingServiceStatuses.SelectingTheRequestedMaintenanceService);
             }
-            else if (conversationData.ServiceBookingForm.RequiredServiceDescription == null)
+            else if (ConversationData.ServiceBookingForm.RequiredServiceDescription == null)
             {
                 SetCurrentDialogStatus(MaintenanceBookingServiceStatuses.GettingTheRequiredServiceDescription);
             }
-            else if (conversationData.ServiceBookingForm.DeliveryLocation == null)
+            else if (ConversationData.ServiceBookingForm.DeliveryLocation == null)
             {
                 SetCurrentDialogStatus(MaintenanceBookingServiceStatuses.GettingTheServiceDeliveryLocation);
             }
-            else if (!conversationData.ServiceBookingForm.IsServiceDeliveryTimeSet)
+            else if (!ConversationData.ServiceBookingForm.IsServiceDeliveryTimeSet)
             {
                 SetCurrentDialogStatus(MaintenanceBookingServiceStatuses.GettingTheRequiredServiceTime);
             }
@@ -51,17 +51,17 @@
             switch (this.currentDialogStatus)
             {
                 case MaintenanceBookingServiceStatuses.SelectingTheRequestedMaintenanceService:
-                    return new SelectingRequestedMaintenanceServiceDialog(conversationData, userProfile);
+                    return new SelectingRequestedMaintenanceServiceDialog(ConversationData, UserProfile);
                 case MaintenanceBookingServiceStatuses.GettingTheRequiredServiceDescription:
-                    return new GettingRequiredServiceDescriptionDialog(conversationData, userProfile);
+                    return new GettingRequiredServiceDescriptionDialog(ConversationData, UserProfile);
                 case MaintenanceBookingServiceStatuses.GettingTheServiceDeliveryLocation:
-                    return new GettingServiceDeliveryLocationDialog(conversationData, userProfile);
+                    return new GettingServiceDeliveryLocationDialog(ConversationData, UserProfile);
                 case MaintenanceBookingServiceStatuses.GettingTheRequiredServiceTime:
-                    return new GettingRequiredServiceDeliveryTimeDialog(conversationData, userProfile);
+                    return new GettingRequiredServiceDeliveryTimeDialog(ConversationData, UserProfile);
                 case MaintenanceBookingServiceStatuses.ConfirmingServiceInfo:
-                    return new ConfirmingServiceInfoDialog(conversationData, userProfile);
+                    return new ConfirmingServiceInfoDialog(ConversationData, UserProfile);
                 default:
-                    return new SelectingRequestedMaintenanceServiceDialog(conversationData, userProfile);
+                    return new SelectingRequestedMaintenanceServiceDialog(ConversationData, UserProfile);
             }
         }
     }

@@ -27,7 +27,7 @@
             
             await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                 Constants.ServiceFieldsMessages.ServiceDeliveryDayMessage,
-                this.userProfile,
+                this.UserProfile,
                 turnContext,
                 cancellationToken,
                 new MessageOption()
@@ -40,7 +40,7 @@
         private string[] GetDayOptions()
         {
             var todayDate = DateTime.Now;
-            var userFormValues = this.conversationData.ServiceBookingForm;
+            var userFormValues = this.ConversationData.ServiceBookingForm;
             var daysInMonth = DateTime.DaysInMonth(userFormValues.Year.Value, userFormValues.Month.Value);
             if (todayDate.Year < userFormValues.Year.Value || todayDate.Month < userFormValues.Month.Value)
             {

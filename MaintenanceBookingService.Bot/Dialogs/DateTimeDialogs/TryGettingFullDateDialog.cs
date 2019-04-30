@@ -32,7 +32,7 @@
             }
             else if (!Utilities.DialogUtils.TryGetDateFromUserInput(userInput, out userRequestedDate))
             {
-                conversationData.ServiceBookingForm.FailedToRecognizeProvidedDate = true;
+                ConversationData.ServiceBookingForm.FailedToRecognizeProvidedDate = true;
             }
 
             if (userRequestedDate.HasValue)
@@ -41,27 +41,27 @@
                 {
                     await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Dialogs.Constants.ServiceFieldsMessages.DateInThePastErrorMessage,
-                        userProfile,
+                        UserProfile,
                         turnContext,
                         cancellationToken);
                 }
                 else
                 {
-                    conversationData.SetWaitingForUserInputFlag(false);
-                    conversationData.ServiceBookingForm.Day = userRequestedDate.Value.Day;
-                    conversationData.ServiceBookingForm.Month = userRequestedDate.Value.Month;
-                    conversationData.ServiceBookingForm.Year = userRequestedDate.Value.Year;
+                    ConversationData.SetWaitingForUserInputFlag(false);
+                    ConversationData.ServiceBookingForm.Day = userRequestedDate.Value.Day;
+                    ConversationData.ServiceBookingForm.Month = userRequestedDate.Value.Month;
+                    ConversationData.ServiceBookingForm.Year = userRequestedDate.Value.Year;
                 }
             }
             else
             {
                 await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Dialogs.Constants.General.InvalidValueProvided,
-                        userProfile,
+                        UserProfile,
                         turnContext,
                         cancellationToken);
 
-                conversationData.SetWaitingForUserInputFlag(false);
+                ConversationData.SetWaitingForUserInputFlag(false);
             }
         }
         
@@ -69,11 +69,11 @@
         {
             await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                     Dialogs.Constants.ServiceFieldsMessages.ServiceDeliveryDateMessage,
-                    userProfile,
+                    UserProfile,
                     turnContext,
                     cancellationToken);
 
-            conversationData.SetWaitingForUserInputFlag();
+            ConversationData.SetWaitingForUserInputFlag();
         }
     }
 }

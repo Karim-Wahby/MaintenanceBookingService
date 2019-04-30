@@ -105,5 +105,10 @@
         {
             return turnContext.Activity.Text?.Trim().ToLower();
         }
+
+        public static object GetEventValue(ITurnContext turnContext)
+        {
+            return turnContext.Activity.Value;
+        }
     }
 }

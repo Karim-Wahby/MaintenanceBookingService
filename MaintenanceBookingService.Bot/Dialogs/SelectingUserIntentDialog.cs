@@ -21,37 +21,37 @@
         {
             await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                     Constants.UserIntentSelection.IntentSelection,
-                    userProfile,
+                    UserProfile,
                     turnContext,
                     cancellationToken);
-            conversationData.SetWaitingForUserInputFlag();
+            ConversationData.SetWaitingForUserInputFlag();
         }
 
         public override async Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            if (conversationData.WaitingForUserInput)
+            if (ConversationData.WaitingForUserInput)
             {
                 var userInput = ConversationUtils.GetUserReply(turnContext);
                 if (DialogUtils.IsUserInputInOptions(userInput, Constants.UserIntentSelection.ReservationPossibleSelectionValues))
                 {
-                    conversationData.CurrentConversationIntent = BotSupportedIntents.MaintenanceBookingService;
+                    ConversationData.CurrentConversationIntent = BotSupportedIntents.MaintenanceBookingService;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.UserIntentSelection.CheckingStatusPossibleSelectionValues))
                 {
-                    conversationData.CurrentConversationIntent = BotSupportedIntents.GettingUpdatesAboutCurrentRequests;
+                    ConversationData.CurrentConversationIntent = BotSupportedIntents.GettingUpdatesAboutCurrentRequests;
                 }
                 else
                 {
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.General.InvalidValueProvided,
-                        this.userProfile,
+                        this.UserProfile,
                         turnContext,
                         cancellationToken);
                 }
 
-                if (conversationData.CurrentConversationIntent.HasValue)
+                if (ConversationData.CurrentConversationIntent.HasValue)
                 {
-                    conversationData.SetWaitingForUserInputFlag(false);
+                    ConversationData.SetWaitingForUserInputFlag(false);
                 }
             }
         }

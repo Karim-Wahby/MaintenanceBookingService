@@ -35,7 +35,7 @@ namespace MaintenanceBookingService.Bot.Dialogs
                     var requestIdAsOption = new string[] { newMaintenanceServiceRequestId };
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.RequestSupmittedMessage,
-                        this.userProfile,
+                        this.UserProfile,
                         turnContext,
                         cancellationToken,
                         formattingValues: new MessageOption()
@@ -45,17 +45,20 @@ namespace MaintenanceBookingService.Bot.Dialogs
                             }
                         );
 
+                    this.ConversationData.NewUserMaintenanceServiceId = newMaintenanceServiceRequestId;
+                    this.ConversationData.IsExpectingFeedBackFromUser = true;
+                    await new GettingUserFeedBackDialog(this.ConversationData, this.UserProfile).StartAsync(turnContext, cancellationToken);
+
                     ClearServiceBookingForm();
                     ResetUserIntentFromDialog();
-                    this.conversationData.NewUserMaintenanceServiceId = newMaintenanceServiceRequestId;
-                    this.conversationData.IsExpectingFeedBackFromUser = true;
-                    this.conversationData.SetWaitingForUserInputFlag(false);
+                    this.ConversationData.NewUserMaintenanceServiceId = newMaintenanceServiceRequestId;
+                    this.ConversationData.SetWaitingForUserInputFlag(false);
                 }
                 else
                 {
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.FailedToSupmitRequestMessage,
-                        this.userProfile,
+                        this.UserProfile,
                         turnContext,
                         cancellationToken
                         );
@@ -63,49 +66,49 @@ namespace MaintenanceBookingService.Bot.Dialogs
             }
             else
             {
-                this.conversationData.SetWaitingForUserInputFlag(false);
+                this.ConversationData.SetWaitingForUserInputFlag(false);
                 if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.RequiredServicenAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.RequestedService = null;
+                    this.ConversationData.ServiceBookingForm.RequestedService = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.ServiceDescriptionAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.RequiredServiceDescription = null;
+                    this.ConversationData.ServiceBookingForm.RequiredServiceDescription = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.AdressAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.DeliveryLocation = null;
+                    this.ConversationData.ServiceBookingForm.DeliveryLocation = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.YearAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.Year = null;
+                    this.ConversationData.ServiceBookingForm.Year = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.MonthAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.Month = null;
+                    this.ConversationData.ServiceBookingForm.Month = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.DayAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.Day = null;
+                    this.ConversationData.ServiceBookingForm.Day = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.HourAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.Hour = null;
+                    this.ConversationData.ServiceBookingForm.Hour = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.MinuteAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.Minutes = null;
+                    this.ConversationData.ServiceBookingForm.Minutes = null;
                 }
                 else if (DialogUtils.IsUserInputInOptions(userInput, Constants.Confirmation.PartOfDayAdjustmentOptionValues))
                 {
-                    this.conversationData.ServiceBookingForm.DayOrNight = null;
+                    this.ConversationData.ServiceBookingForm.DayOrNight = null;
                 }
                 else
                 {
-                    this.conversationData.SetWaitingForUserInputFlag();
+                    this.ConversationData.SetWaitingForUserInputFlag();
                     await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.General.InvalidValueProvided,
-                        this.userProfile,
+                        this.UserProfile,
                         turnContext,
                         cancellationToken
                         );
@@ -115,17 +118,19 @@ namespace MaintenanceBookingService.Bot.Dialogs
 
         private void ResetUserIntentFromDialog()
         {
-            this.conversationData.CurrentConversationIntent = null;
+            this.ConversationData.CurrentConversationIntent = null;
     }
 
         private void ClearServiceBookingForm()
         {
-            this.conversationData.ServiceBookingForm = new MaintenanceBookingServiceForm();
+            this.ConversationData.ServiceBookingForm = new MaintenanceBookingServiceForm();
+            this.ConversationData.IsExpectingFeedBackFromUser = false;
+            this.ConversationData.NewUserMaintenanceServiceId = string.Empty;
         }
 
         private async Task<string> PostMaintenanceServiceRequestForTheUser()
         {
-            var userFilledFormValues = this.conversationData.ServiceBookingForm;
+            var userFilledFormValues = this.ConversationData.ServiceBookingForm;
 
             var userRequestedDelivaryDate = new System.DateTime(
                     userFilledFormValues.Year.Value,
@@ -136,13 +141,13 @@ namespace MaintenanceBookingService.Bot.Dialogs
                     0);
 
             var conversationChannelData = new ConversationChannelData(
-                this.userProfile.Id,
-                this.userProfile.Name,
-                this.conversationData.BotId,
-                this.conversationData.BotName,
-                this.userProfile.ChannelId,
-                this.conversationData.ConversationId,
-                this.conversationData.ServiceUrl);
+                this.UserProfile.Id,
+                this.UserProfile.Name,
+                this.ConversationData.BotId,
+                this.ConversationData.BotName,
+                this.UserProfile.ChannelId,
+                this.ConversationData.ConversationId,
+                this.ConversationData.ServiceUrl);
 
             var serviceBookingRequest = new BookingRequest(
                 userFilledFormValues.RequestedService.Value,
@@ -150,7 +155,7 @@ namespace MaintenanceBookingService.Bot.Dialogs
                 userFilledFormValues.DeliveryLocation,
                 userRequestedDelivaryDate,
                 conversationChannelData,
-                this.userProfile.PreferredLanguage.Value);
+                this.UserProfile.PreferredLanguage.Value);
 
             var stringContent = new StringContent(JsonConvert.SerializeObject(serviceBookingRequest), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync("http://localhost:2614/api/MaintenanceServicesRequests/AddRequest/", stringContent);
@@ -161,7 +166,7 @@ namespace MaintenanceBookingService.Bot.Dialogs
         {
             var formRepresentation = new string[]
                 {
-                    this.conversationData.ServiceBookingForm.ToLocalizedStrings(this.userProfile.PreferredLanguage.Value)
+                    this.ConversationData.ServiceBookingForm.ToLocalizedStrings(this.UserProfile.PreferredLanguage.Value)
                 };
 
             var formValuesStringRepresentation = new MessageOption()
@@ -172,12 +177,12 @@ namespace MaintenanceBookingService.Bot.Dialogs
 
             await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.Confirmation.ConfirmationMessage,
-                        this.userProfile,
+                        this.UserProfile,
                         turnContext,
                         cancellationToken,
                         formattingValues: formValuesStringRepresentation);
 
-            conversationData.SetWaitingForUserInputFlag(true);
+            ConversationData.SetWaitingForUserInputFlag(true);
         }
     }
 }

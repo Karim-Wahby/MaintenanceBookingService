@@ -21,41 +21,41 @@
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.RequestedMaintenanceServiceSelection.CarpentryPossibleValues))
             {
-                conversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.Carpentry;
+                ConversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.Carpentry;
             }
             else if (DialogUtils.IsUserInputInOptions(userInput, Constants.RequestedMaintenanceServiceSelection.ElectricalMaintenancePossibleValues))
             {
-                conversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.ElectricalMaintenance;
+                ConversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.ElectricalMaintenance;
             }
             else if (DialogUtils.IsUserInputInOptions(userInput, Constants.RequestedMaintenanceServiceSelection.PlumbingPossibleValues))
             {
-                conversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.PlumbingServices;
+                ConversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.PlumbingServices;
             }
             else if (DialogUtils.IsUserInputInOptions(userInput, Constants.RequestedMaintenanceServiceSelection.AirConditioningPossibleValues))
             {
-                conversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.AirConditioningMaintenance;
+                ConversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.AirConditioningMaintenance;
             }
             else if (DialogUtils.IsUserInputInOptions(userInput, Constants.RequestedMaintenanceServiceSelection.PaintingPossibleValues))
             {
-                conversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.PaintingServices;
+                ConversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.PaintingServices;
             }
             else if (DialogUtils.IsUserInputInOptions(userInput, Constants.RequestedMaintenanceServiceSelection.CleaningPossibleValues))
             {
-                conversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.Cleaning;
+                ConversationData.ServiceBookingForm.RequestedService = SupportedMaintenanceServices.Cleaning;
             }
             else
             {
                 await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                     Constants.General.InvalidValueProvided,
-                    userProfile,
+                    UserProfile,
                     turnContext,
                     cancellationToken
                     );
             }
 
-            if (conversationData.ServiceBookingForm.RequestedService.HasValue)
+            if (ConversationData.ServiceBookingForm.RequestedService.HasValue)
             {
-                conversationData.SetWaitingForUserInputFlag(false);
+                ConversationData.SetWaitingForUserInputFlag(false);
             }
         }
 
@@ -63,11 +63,11 @@
         {
             await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.RequestedMaintenanceServiceSelection.AskingForRequiredService,
-                        userProfile,
+                        UserProfile,
                         turnContext,
                         cancellationToken);
 
-            conversationData.SetWaitingForUserInputFlag();
+            ConversationData.SetWaitingForUserInputFlag();
         }
     }
 }

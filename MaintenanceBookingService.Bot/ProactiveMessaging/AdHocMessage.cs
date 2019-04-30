@@ -11,7 +11,11 @@
 
     public static class AdHocMessage
     {
-        public static async Task SendMessageAsync(ConversationChannelData userCommunicationChannelInfo, SupportedLanguage userPreferedLangue, Models.Message messageToSend, Models.MessageOption messgeOptions = null, bool startNewConversation = false)
+        public static async Task SendMessageAsync(
+            ConversationChannelData userCommunicationChannelInfo, 
+            SupportedLanguage userPreferedLangue, 
+            Models.Message messageToSend, 
+            Models.MessageOption messgeOptions = null)
         {
             var userAccount = new ChannelAccount(userCommunicationChannelInfo.UserId, userCommunicationChannelInfo.UserName);
             var botAccount = new ChannelAccount(userCommunicationChannelInfo.BotId, userCommunicationChannelInfo.BotName);
@@ -20,8 +24,7 @@
             // Create a new message.
             IMessageActivity proactiveMessageActivity = Activity.CreateMessageActivity();
             if (!string.IsNullOrEmpty(userCommunicationChannelInfo.ConversationId) 
-                && !string.IsNullOrEmpty(userCommunicationChannelInfo.ChannelId)
-                && !startNewConversation)
+                && !string.IsNullOrEmpty(userCommunicationChannelInfo.ChannelId))
             {
                 // If conversation ID and channel ID was stored previously, use it.
                 proactiveMessageActivity.ChannelId = userCommunicationChannelInfo.ChannelId;

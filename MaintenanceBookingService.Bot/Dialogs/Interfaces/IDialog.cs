@@ -1,5 +1,6 @@
 ﻿namespace MaintenanceBookingService.Bot.Dialogs.Interfaces
 {
+    using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
     using System;
     using System.Collections.Generic;
@@ -7,10 +8,14 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public interface IDialog
+    public abstract class IDialog
     {
-        Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken);
+        public ConversationData ConversationData { get; set; }
 
-        Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken);
+        public UserData UserProfile { get; set; }
+
+        public abstract Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken);
+
+        public abstract Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken);
     }
 }

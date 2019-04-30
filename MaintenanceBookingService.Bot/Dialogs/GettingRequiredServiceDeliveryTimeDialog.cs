@@ -16,11 +16,11 @@
         
         protected override void DetermineWhatShouldtheCurrentDialogStatusBe()
         {
-            if (!this.conversationData.ServiceBookingForm.IsDateSet)
+            if (!this.ConversationData.ServiceBookingForm.IsDateSet)
             {
                 this.SetCurrentDialogStatus(GettingServiceDeliveryTimeStatuses.GettingDate);
             }
-            else if (!this.conversationData.ServiceBookingForm.IsTimeSet)
+            else if (!this.ConversationData.ServiceBookingForm.IsTimeSet)
             {
                 this.SetCurrentDialogStatus(GettingServiceDeliveryTimeStatuses.GettingTime);
             }
@@ -35,11 +35,11 @@
             switch (this.currentDialogStatus)
             {
                 case GettingServiceDeliveryTimeStatuses.GettingDate:
-                    return new DateTimeDialogs.GetDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetDateDialog(ConversationData, UserProfile);
                 case GettingServiceDeliveryTimeStatuses.GettingTime:
-                    return new DateTimeDialogs.GetTimeDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetTimeDialog(ConversationData, UserProfile);
                 default:
-                    return new DateTimeDialogs.GetDateDialog(conversationData, userProfile);
+                    return new DateTimeDialogs.GetDateDialog(ConversationData, UserProfile);
             }
         }
     }

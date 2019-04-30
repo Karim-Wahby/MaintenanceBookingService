@@ -9,6 +9,18 @@ namespace MaintenanceBookingService.Bot.Models
 {
     public class UserData
     {
+        public UserData()
+        {
+        }
+
+        public UserData(UserData other)
+        {
+            this.Name = other.Name;
+            this.Id = other.Id;
+            this.ChannelId = other.ChannelId;
+            this.PreferredLanguage = other.PreferredLanguage;
+        }
+
         public string Name { get; set; } = string.Empty;
 
         public string Id { get; set; } = string.Empty;

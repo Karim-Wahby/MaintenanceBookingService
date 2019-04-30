@@ -10,17 +10,14 @@
 
     public abstract class IStatelessDialog : IDialog
     {
-        protected ConversationData conversationData { get; set; }
-        protected UserData userProfile;
-
         public IStatelessDialog(ConversationData conversationData, UserData userProfile)
         {
-            this.conversationData = conversationData;
-            this.userProfile = userProfile;
+            this.ConversationData = conversationData;
+            this.UserProfile = userProfile;
         }
 
-        public abstract Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken);
+        public override abstract Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken);
 
-        public abstract Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken);
+        public override abstract Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken);
     }
 }

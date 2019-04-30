@@ -16,8 +16,8 @@
 
         public override Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            conversationData.ServiceBookingForm.DeliveryLocation = ConversationUtils.GetUserReply(turnContext);
-            conversationData.SetWaitingForUserInputFlag(false);
+            ConversationData.ServiceBookingForm.DeliveryLocation = ConversationUtils.GetUserReply(turnContext);
+            ConversationData.SetWaitingForUserInputFlag(false);
             return Task.FromResult(0);
         }
 
@@ -25,11 +25,11 @@
         {
             await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                         Constants.ServiceFieldsMessages.ServiceDeliveryLocationMessage,
-                        userProfile,
+                        UserProfile,
                         turnContext,
                         cancellationToken);
 
-            conversationData.SetWaitingForUserInputFlag();
+            ConversationData.SetWaitingForUserInputFlag();
         }
     }
 }

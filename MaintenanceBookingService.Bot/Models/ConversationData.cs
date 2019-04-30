@@ -8,6 +8,25 @@
 
     public class ConversationData
     {
+        public ConversationData()
+        {
+        }
+
+        public ConversationData(ConversationData other)
+        {
+            this.CurrentConversationIntent = other.CurrentConversationIntent;
+            this.ServiceBookingForm = other.ServiceBookingForm;
+            this.DialogsStatuses = other.DialogsStatuses;
+            this.IsInProActiveDialog = other.IsInProActiveDialog;
+            this.NewUserMaintenanceServiceId = other.NewUserMaintenanceServiceId;
+            this.IsExpectingFeedBackFromUser = other.IsExpectingFeedBackFromUser;
+            this.WaitingForUserInput = other.WaitingForUserInput;
+            this.BotId = other.BotId;
+            this.BotName = other.BotName;
+            this.ServiceUrl = other.ServiceUrl;
+            this.ConversationId = other.ConversationId;
+        }
+
         public BotSupportedIntents? CurrentConversationIntent { get; set; } = null;
 
         public MaintenanceBookingServiceForm ServiceBookingForm { get; set; } = new MaintenanceBookingServiceForm();
@@ -15,9 +34,11 @@
         // Dialog name To Dialog State
         public Dictionary<string, string> DialogsStatuses { get; set; } = new Dictionary<string, string>();
 
-        public string NewUserMaintenanceServiceId = string.Empty;
+        public bool IsInProActiveDialog { get; set; } = false;
 
-        public bool IsExpectingFeedBackFromUser = false;
+        public string NewUserMaintenanceServiceId { get; set; } = string.Empty;
+
+        public bool IsExpectingFeedBackFromUser { get; set; } = false;
 
         public bool WaitingForUserInput { get; set; } = false;
 

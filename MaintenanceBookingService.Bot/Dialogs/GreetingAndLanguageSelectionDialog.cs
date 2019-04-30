@@ -21,18 +21,18 @@
         public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             await ConversationUtils.SendMessage(
-                string.Format(Constants.General.Greetings.CombineLanguageValues(), this.userProfile.Name),
+                string.Format(Constants.General.Greetings.CombineLanguageValues(), this.UserProfile.Name),
                 turnContext,
                 cancellationToken
                 );
 
             await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                 Constants.LanguageSelection.AskingForpreferredLanguage,
-                this.userProfile,
+                this.UserProfile,
                 turnContext,
                 cancellationToken);
 
-            conversationData.SetWaitingForUserInputFlag();
+            ConversationData.SetWaitingForUserInputFlag();
         }
 
         public override async Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
@@ -40,11 +40,11 @@
             var userInput = ConversationUtils.GetUserReply(turnContext);
             if (DialogUtils.IsUserInputInOptions(userInput, Constants.LanguageSelection.EnglishLanguagePossibleSelectionValues))
             {
-                userProfile.PreferredLanguage = SupportedLanguage.English;
+                UserProfile.PreferredLanguage = SupportedLanguage.English;
             }
             else if (DialogUtils.IsUserInputInOptions(userInput, Constants.LanguageSelection.ArabicLanguagePossibleSelectionValues))
             {
-                userProfile.PreferredLanguage = SupportedLanguage.Arabic;
+                UserProfile.PreferredLanguage = SupportedLanguage.Arabic;
             }
             else
             {
@@ -53,9 +53,9 @@
                         cancellationToken);
             }
 
-            if (userProfile.PreferredLanguage.HasValue)
+            if (UserProfile.PreferredLanguage.HasValue)
             {
-                this.conversationData.SetWaitingForUserInputFlag(false);
+                this.ConversationData.SetWaitingForUserInputFlag(false);
             }
         }
     }

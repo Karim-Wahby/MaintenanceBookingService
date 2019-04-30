@@ -14,6 +14,7 @@
     using MaintenanceBookingService.Bot.Dialogs.Interfaces;
     using MaintenanceBookingService.Bot.Dialogs;
     using MaintenanceBookingService.Bot.Dialogs.Utilities;
+    using MaintenanceBookingService.Bot.Dialogs.Definitions;
 
     /// <summary>
     /// Represents a bot that processes incoming activities.
@@ -61,10 +62,38 @@
                     await HandleDeleteUserDataRequest(turnContext, cancellationToken);
                     break;
                 case ActivityTypes.ConversationUpdate:
-                    await HandleConverstationUpdate(turnContext, cancellationToken);
+                    await HandleAddingMemberToConversation(turnContext, cancellationToken);
+                    break;
+                case ActivityTypes.MessageUpdate:
+                    //await HandleProActiveDialogActivationsAsync(turnContext, cancellationToken);
                     break;
                 default:
                     break;
+            }
+        }
+
+        private async Task HandleProActiveDialogActivationsAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            var eventValue = ConversationUtils.GetEventValue(turnContext);
+            if (eventValue != null && eventValue is DialogActivationEventValue)
+            {
+                DialogActivationEventValue proActiveDialogActivationEventValue = eventValue as DialogActivationEventValue;
+                if (proActiveDialogActivationEventValue.DialogName == GettingUserFeedBackDialog.DialogName)
+                {
+                    var oldUserProfile = await conversationStateDataAccessor.GetUserData(turnContext);
+                    var oldConversationData = await conversationStateDataAccessor.GetConversationData(turnContext);
+
+                    IEventActivatedDialog dialog = 
+                        new GettingUserFeedBackDialog(
+                            proActiveDialogActivationEventValue.StateKey,
+                            oldConversationData,
+                            oldUserProfile);
+
+                    await dialog.ProActiveMessageToUseAsync(turnContext, cancellationToken);
+
+                    await conversationStateDataAccessor.UpdateUserData(turnContext, dialog.UserProfile);
+                    await conversationStateDataAccessor.UpdateConversationData(turnContext, dialog.ConversationData);
+                }
             }
         }
 
@@ -74,7 +103,7 @@
             await ConversationUtils.SendMessage("User Data Deleted (Y)!", turnContext, cancellationToken);
         }
 
-        private async Task HandleConverstationUpdate(ITurnContext turnContext, CancellationToken cancellationToken)
+        private async Task HandleAddingMemberToConversation(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             if (turnContext.Activity.MembersAdded != null)
             {
@@ -119,6 +148,8 @@
                     }
                 }
 
+                conversationData = suitableDialog.ConversationData;
+                userProfile = suitableDialog.UserProfile;
             } while (!conversationData.WaitingForUserInput) ;
             
             await conversationStateDataAccessor.UpdateUserData(turnContext, userProfile);

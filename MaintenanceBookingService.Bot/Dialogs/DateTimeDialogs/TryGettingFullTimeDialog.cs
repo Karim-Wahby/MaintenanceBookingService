@@ -24,9 +24,9 @@
             if (Utilities.DialogUtils.IsUserInputInOptions(userInput, Dialogs.Constants.ServiceFieldsMessages.AsSoonAsPossibleOptionValues))
             {
                 var todayDateAndTime = DateTime.Now;
-                if (conversationData.ServiceBookingForm.Year > todayDateAndTime.Year ||
-                    conversationData.ServiceBookingForm.Month > todayDateAndTime.Month ||
-                    conversationData.ServiceBookingForm.Day > todayDateAndTime.Day)
+                if (ConversationData.ServiceBookingForm.Year > todayDateAndTime.Year ||
+                    ConversationData.ServiceBookingForm.Month > todayDateAndTime.Month ||
+                    ConversationData.ServiceBookingForm.Day > todayDateAndTime.Day)
                 {
                     userRequestedTime = new TimeSpan(8, 0, 0);
                 }
@@ -41,15 +41,15 @@
             }
             else if (!Utilities.DialogUtils.TryGetTimeFromUserInput(userInput, out userRequestedTime))
             {
-                conversationData.ServiceBookingForm.FailedToRecognizeProvidedDate = true;
+                ConversationData.ServiceBookingForm.FailedToRecognizeProvidedDate = true;
             }
 
             if (userRequestedTime.HasValue)
             {
-                conversationData.SetWaitingForUserInputFlag(false);
-                conversationData.ServiceBookingForm.Hour = userRequestedTime.Value.Hours % 12;
-                conversationData.ServiceBookingForm.Minutes = userRequestedTime.Value.Minutes;
-                conversationData.ServiceBookingForm.DayOrNight = userRequestedTime.Value.Hours > 12 ? "PM" : "AM";
+                ConversationData.SetWaitingForUserInputFlag(false);
+                ConversationData.ServiceBookingForm.Hour = userRequestedTime.Value.Hours % 12;
+                ConversationData.ServiceBookingForm.Minutes = userRequestedTime.Value.Minutes;
+                ConversationData.ServiceBookingForm.DayOrNight = userRequestedTime.Value.Hours > 12 ? "PM" : "AM";
             }
         }
 
@@ -57,11 +57,11 @@
         {
             await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                     Dialogs.Constants.ServiceFieldsMessages.ServiceDeliveryTimeMessage,
-                    userProfile,
+                    UserProfile,
                     turnContext,
                     cancellationToken);
 
-            conversationData.SetWaitingForUserInputFlag();
+            ConversationData.SetWaitingForUserInputFlag();
         }
     }
 }
