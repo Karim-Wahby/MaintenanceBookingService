@@ -1,5 +1,6 @@
 ﻿namespace MaintenanceBookingService.Bot.Dialogs.DateTimeDialogs
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using MaintenanceBookingService.Bot.Dialogs.Interfaces;
@@ -13,14 +14,50 @@
         {
         }
 
-        public override Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        public override async Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var userInput = Utilities.ConversationUtils.GetUserReply(turnContext);
+            var currentDate = DateTime.Now;
+            int userRequiredMinute;
+            if (int.TryParse(userInput, out userRequiredMinute) &&
+                userRequiredMinute > 0 &&
+                userRequiredMinute < 60)
+            {
+                if (currentDate.Year < this.ConversationData.ServiceBookingForm.Year ||
+                    currentDate.Month < this.ConversationData.ServiceBookingForm.Month ||
+                    currentDate.Day < this.ConversationData.ServiceBookingForm.Day ||
+                    currentDate.Hour + 1 < this.ConversationData.ServiceBookingForm.Hour ||
+                    currentDate.Minute <= userRequiredMinute)
+                {
+                    this.ConversationData.ServiceBookingForm.Minutes = userRequiredMinute;
+                    this.ConversationData.SetWaitingForUserInputFlag(false);
+                }
+                else
+                {
+                    await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                        Dialogs.Constants.ServiceFieldsMessages.TimeInThePastErrorMessage,
+                        UserProfile,
+                        turnContext,
+                        cancellationToken);
+                }
+            }
+            else
+            {
+                await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                        Dialogs.Constants.General.InvalidValueProvided,
+                        UserProfile,
+                        turnContext,
+                        cancellationToken);
+            }
         }
 
-        public override Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                Constants.ServiceFieldsMessages.ServiceDeliveryMinuteMessage,
+                this.UserProfile,
+                turnContext,
+                cancellationToken);
         }
     }
 }

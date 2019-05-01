@@ -16,9 +16,40 @@
         {
         }
 
-        public override Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        public override async Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var userInput = Utilities.ConversationUtils.GetUserReply(turnContext);
+            int userRequiredDay;
+            if (int.TryParse(userInput, out userRequiredDay) &&
+                userRequiredDay <= DateTime.DaysInMonth(this.ConversationData.ServiceBookingForm.Year.Value, this.ConversationData.ServiceBookingForm.Month.Value) &&
+                userRequiredDay > 0)
+            {
+                var currentDate = DateTime.Now;
+
+                if (currentDate.Year < this.ConversationData.ServiceBookingForm.Year ||
+                    currentDate.Month < this.ConversationData.ServiceBookingForm.Month ||
+                    currentDate.Day <= userRequiredDay)
+                {
+                    this.ConversationData.ServiceBookingForm.Day = userRequiredDay;
+                    this.ConversationData.SetWaitingForUserInputFlag(false);
+                }
+                else
+                {
+                    await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                        Dialogs.Constants.ServiceFieldsMessages.DateInThePastErrorMessage,
+                        UserProfile,
+                        turnContext,
+                        cancellationToken);
+                }
+            }
+            else
+            {
+                await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                        Dialogs.Constants.General.InvalidValueProvided,
+                        UserProfile,
+                        turnContext,
+                        cancellationToken);
+            }
         }
 
         public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)

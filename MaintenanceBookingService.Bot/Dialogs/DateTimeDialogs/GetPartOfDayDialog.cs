@@ -1,5 +1,6 @@
 ﻿namespace MaintenanceBookingService.Bot.Dialogs.DateTimeDialogs
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using MaintenanceBookingService.Bot.Dialogs.Interfaces;
@@ -13,14 +14,36 @@
         {
         }
 
-        public override Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        public override async Task HandleIncomingUserResponseAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var userInput = Utilities.ConversationUtils.GetUserReply(turnContext);
+            if (Utilities.DialogUtils.IsUserInputInOptions(userInput, Constants.ServiceFieldsMessages.PMOptionValues))
+            {
+                this.ConversationData.ServiceBookingForm.DayOrNight = "PM";
+                this.ConversationData.SetWaitingForUserInputFlag(false);
+            }
+            else if (Utilities.DialogUtils.IsUserInputInOptions(userInput, Constants.ServiceFieldsMessages.AMOptionValues))
+            {
+                this.ConversationData.ServiceBookingForm.DayOrNight = "AM";
+                this.ConversationData.SetWaitingForUserInputFlag(false);
+            }
+            else
+            {
+                await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                    Dialogs.Constants.General.InvalidValueProvided,
+                    UserProfile,
+                    turnContext,
+                    cancellationToken);
+            }
         }
 
-        public override Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        public override async Task StartAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                Constants.ServiceFieldsMessages.ServiceDeliveryPartOfDayMessage,
+                this.UserProfile,
+                turnContext,
+                cancellationToken);
         }
     }
 }

@@ -42,6 +42,11 @@
             else if (!Utilities.DialogUtils.TryGetTimeFromUserInput(userInput, out userRequestedTime))
             {
                 ConversationData.ServiceBookingForm.FailedToRecognizeProvidedDate = true;
+                await Utilities.ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
+                    Dialogs.Constants.General.InvalidValueProvided,
+                    UserProfile,
+                    turnContext,
+                    cancellationToken);
             }
 
             if (userRequestedTime.HasValue)
