@@ -17,42 +17,42 @@
         private static string botUserUpdatingEndPointUrl = "http://localhost:3978/api/UpdateCustomerWithHisRequestStatus/";
         private static readonly HttpClient httpClient = new HttpClient();
 
-        [Route("api/MaintenanceServicesRequests/")]
+        [Route("api/MaintenanceServicesRequests")]
         [HttpGet]
         public IEnumerable<BookingRequest> GetAllRequests()
         {
             return ScheduleMaintenanceServices.GetAllRequests();
         }
 
-        [Route("api/MaintenanceServicesRequests/PendingApproval/")]
+        [Route("api/MaintenanceServicesRequests/PendingApproval")]
         [HttpGet]
         public IEnumerable<BookingRequest> GetAllPendingApprovalRequests()
         {
             return ScheduleMaintenanceServices.GetAllPendingApprovalRequests();
         }
 
-        [Route("api/MaintenanceServicesRequests/ApprovedRequests/")]
+        [Route("api/MaintenanceServicesRequests/ApprovedRequests")]
         [HttpGet]
         public IEnumerable<BookingRequest> GetAllApprovedRequests()
         {
             return ScheduleMaintenanceServices.GetAllApprovedRequests();
         }
 
-        [Route("api/MaintenanceServicesRequests/DeliveredRequests/")]
+        [Route("api/MaintenanceServicesRequests/DeliveredRequests")]
         [HttpGet]
         public IEnumerable<BookingRequest> GetAllDeliveredRequests()
         {
             return ScheduleMaintenanceServices.GetAllDeliveredRequests();
         }
 
-        [Route("api/MaintenanceServicesRequests/UserRequests/{userId}")]
+        [Route("api/MaintenanceServicesRequests/UserRequests")]
         [HttpGet]
         public IEnumerable<BookingRequest> GetUserRequests(string userId)
         {
             return ScheduleMaintenanceServices.GetRequestWithUserId(userId);
         }
         
-        [Route("api/MaintenanceServicesRequests/{id}")]
+        [Route("api/MaintenanceServicesRequests/GetRequestWithId")]
         public BookingRequest GetRequestWithId(string id)
         {
             return ScheduleMaintenanceServices.GetRequestWithId(id);
@@ -60,7 +60,7 @@
 
         [Route("api/MaintenanceServicesRequests/AddRequest")]
         [HttpPost]
-        public async Task<string> AddRequest()
+        public async Task<string> AddRequestAsync()
         {
             var request = await Request.Content.ReadAsAsync<BookingRequest>();
             if (ScheduleMaintenanceServices.AddNewRequestPendingApproval(request))
@@ -73,33 +73,33 @@
             }
         }
 
-        [Route("api/MaintenanceServicesRequests/ApproveRequest/{id}")]
+        [Route("api/MaintenanceServicesRequests/ApproveRequest")]
         [HttpGet]
         public async Task<bool> ApproveRequestAsync(string id)
         {
             var approvedRequest = ScheduleMaintenanceServices.ApproveRequest(id);
             if (approvedRequest != null)
             {
-                return await UpdateUserWithNewRequestStatus(approvedRequest);
+                return await UpdateUserWithNewRequestStatusAsync(approvedRequest);
             }
 
             return false;
         }
 
-        [Route("api/MaintenanceServicesRequests/FinalizeRequest/{id}")]
+        [Route("api/MaintenanceServicesRequests/FinalizeRequest")]
         [HttpGet]
         public async Task<bool> FinalizeRequestAsync(string id)
         {
             var finalizedRequest = ScheduleMaintenanceServices.FinalizeRequest(id);
             if (finalizedRequest != null)
             {
-                return await UpdateUserWithNewRequestStatus(finalizedRequest);
+                return await UpdateUserWithNewRequestStatusAsync(finalizedRequest);
             }
 
             return false;
         }
 
-        private async Task<bool> UpdateUserWithNewRequestStatus(BookingRequest userRequest)
+        private async Task<bool> UpdateUserWithNewRequestStatusAsync(BookingRequest userRequest)
         {
             if (userRequest != null)
             {
