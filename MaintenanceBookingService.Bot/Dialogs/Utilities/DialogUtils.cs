@@ -25,10 +25,16 @@
             userRequestedDate = null;
             var managedToRecognize = GetDateOrTimeFromUserInput(userInput, UserDateTimeValueOptions.Date, out datetimeDump);
 
-            // the returned formate is in mm/dd/yyyy not in dd/mm/yyyy so we need to switch day and month if possible
-            if (managedToRecognize && TryReplaceDayWithMonthInRecognizedDate(userRequestedDate, out datetimeDump))
+            if (managedToRecognize)
             {
                 userRequestedDate = datetimeDump;
+
+                // the returned formate is in mm/dd/yyyy not in dd/mm/yyyy so we need to switch day and month if possible
+                if (TryReplaceDayWithMonthInRecognizedDate(userRequestedDate, out datetimeDump))
+                {
+                    userRequestedDate = datetimeDump;
+                }
+
             }
 
             return managedToRecognize;
@@ -37,8 +43,13 @@
         public static bool TryGetTimeFromUserInput(string userInput, out TimeSpan? userRequestedTime)
         {
             DateTime datetimeDump = default(DateTime);
+            userRequestedTime = null;
             var managedToRecognize = GetDateOrTimeFromUserInput(userInput, UserDateTimeValueOptions.Time, out datetimeDump);
-            userRequestedTime = datetimeDump.TimeOfDay;
+            if (managedToRecognize)
+            {
+                userRequestedTime = datetimeDump.TimeOfDay;
+            }
+
             return managedToRecognize;
         }
 
