@@ -136,7 +136,7 @@ namespace MaintenanceBookingService.Bot.Dialogs
                     userFilledFormValues.Year.Value,
                     userFilledFormValues.Month.Value,
                     userFilledFormValues.Day.Value,
-                    userFilledFormValues.Hour.Value,
+                    userFilledFormValues.DayOrNight == "PM" ? userFilledFormValues.Hour.Value + 12 : userFilledFormValues.Hour.Value,
                     userFilledFormValues.Minutes.Value,
                     0);
 
