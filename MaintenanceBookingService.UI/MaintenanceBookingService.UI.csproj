@@ -173,7 +173,11 @@
     <Content Include="Scripts\Utilities\APIManager.js" />
     <Content Include="Scripts\Utilities\LoadingWheelManager.js" />
     <Content Include="Scripts\Utilities\TableManager.js" />
+    <Content Include="Scripts\ViewManagers\ApprovedRequestsViewManager.js" />
+    <Content Include="Scripts\ViewManagers\DeliveredRequestsViewManager.js" />
     <Content Include="Scripts\ViewManagers\PendingApprovalViewManager.js" />
+    <Content Include="Scripts\ViewManagers\ServiceDetailsViewManager.js" />
+    <Content Include="Scripts\ViewManagers\ServiceRequest.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -188,6 +192,7 @@
     <Content Include="Views\Home\ApprovedServices.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\DeliveredServices.cshtml" />
+    <Content Include="Views\Shared\_ServiceDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

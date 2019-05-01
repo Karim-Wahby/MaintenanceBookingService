@@ -53,6 +53,7 @@ var TableManager = function (tableContainerIdDetails, tableSettings) {
                     var alredyClicked = $(this).hasClass("highlighted-row");
                     if (!alredyClicked) {
                         $(this).addClass("highlighted-row");
+                        $(this).siblings().removeClass("highlighted-row");
                         onClickEventHandler(onClickEventData);
                     }
                 });

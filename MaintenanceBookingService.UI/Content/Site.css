@@ -39,3 +39,7 @@ textarea {
 .layout-table td {
     padding-left: 10px;
 }
+
+.highlighted-row td, .highlighted-row th {
+    background-color: aliceblue !important;
+}

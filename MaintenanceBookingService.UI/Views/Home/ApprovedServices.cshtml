@@ -1,6 +1,60 @@
 ﻿@{
-    ViewBag.Title = "Approved Services";
+    ViewBag.Title = "Services Pending Approval";
 }
-<h2>@ViewBag.Title.</h2>
+@section styles{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css" />
+}
 
-<p>Approved Services</p>
+@section scripts {
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+
+    <script src="~/Scripts/Utilities/APIManager.js"></script>
+    <script src="~/Scripts/Utilities/LoadingWheelManager.js"></script>
+    <script src="~/Scripts/Utilities/TableManager.js"></script>
+    <script src="~/Scripts/ViewManagers/ServiceRequest.js"></script>
+    <script src="~/Scripts/ViewManagers/ServiceDetailsViewManager.js"></script>
+    <script src="~/Scripts/ViewManagers/ApprovedRequestsViewManager.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        appRoot = '@Url.Content("~/")';
+        approvedRequestsViewManager = ApprovedRequestsViewManager(
+            TableContainerIdDetails("ApprovedServicesLoadingWheel",
+                "ApprovedServicesContainer",
+                "ApprovedServicesTable"),
+            "ApproveRequestTableButton",
+            ServiceDetailsViewManager("ServiceDetailsTemplate",
+            "ServiceDetailsLoadingWheel",
+            "ServiceDetailsContainer"));
+
+        approvedRequestsViewManager.DisplayAllApprovedRequests();
+    });
+    </script>
+}
+
+<div class="col-md-8">
+    <h2>Approved Services</h2>
+    <div id="ApprovedServicesLoadingWheel"></div>
+    <div id="ApprovedServicesContainer">
+        <table id="ApprovedServicesTable" class="display table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Required Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Delivered</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div class="col-md-4">
+    @Html.Partial("_ServiceDetails")
+</div>
+
+<div class="template">
+    <div id="ApproveRequestTableButton">
+        <button id="__id__" class="btn btn-success" type="button" onclick="approvedRequestsViewManager.MaskRequestAsDelivered(__OnClickEventHandlerData__);">Delivered</button>
+    </div>
+</div>

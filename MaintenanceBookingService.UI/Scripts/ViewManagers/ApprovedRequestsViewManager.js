@@ -1,18 +1,18 @@
-﻿var PendingApprovalViewManager = function (
+﻿var ApprovedRequestsViewManager = function (
     tableContainerIdDetails,
-    tableApproveButtonTemplateId,
+    tableMarkDeliveredButtonTemplateId,
     serviceDetailsViewManager)
 {
     var apiManager = new APIManager();
 
     var ServiceRequestUtilites = new ServiceRequestHelper();
 
-    var pendingApprovalRequestsTable = new TableManager(
+    var ApprovedRequestsTable = new TableManager(
         tableContainerIdDetails,
         {
             order: [[2, "desc"], [3, "desc"]],
             createdRow: function (row, data, index) {
-                row.id = GetRequestRowId(data.Id);
+                row.id = GetServiceIdRowId(data.Id);
             },
             columns: [
                 {
@@ -39,10 +39,10 @@
                 {
                     data: 'Id',
                     render: function (requestId, unUsed, requestObject, tableObject) {
-                        return $("#" + tableApproveButtonTemplateId)
+                        return $("#" + tableMarkDeliveredButtonTemplateId)
                             .html()
                             .replace("__OnClickEventHandlerData__", "'" + requestId + "'")
-                            .replace("__id__", GetRequestApproveButtonId(requestId));
+                            .replace("__id__", GetMarkDeliveredButtonId(requestId));
                     }
                 }
             ],
@@ -70,51 +70,51 @@
             ]
         });
 
-    var GetRequestApproveButtonId = function (requestId) {
-        return 'Request_' + requestId + '_ApproveButton';
+    var GetMarkDeliveredButtonId = function (requestId) {
+        return 'Request_' + requestId + '_MarkDeliveredButton';
     };
 
-    var GetRequestRowId = function (requestId) {
-        return 'PendingApprovalRequest_' + requestId + '_Row';
+    var GetServiceIdRowId = function (requestId) {
+        return 'ApprovedRequest_' + requestId + '_Row';
     };
 
-    var ApprovePendingRequest = function (requestId) {
+    var MaskRequestAsDelivered = function (serviceId) {
         var param = {};
-        param['id'] = requestId;
+        param['id'] = serviceId;
         apiManager.get(
             "MaintenanceServicesRequests",
-            "ApproveRequest",
+            "FinalizeRequest",
             param,
             function (success) {
                 if (success) {
-                    pendingApprovalRequestsTable.RemoveRow(GetRequestRowId(requestId));
-                    alert("user request approved successfully!!");
+                    ApprovedRequestsTable.RemoveRow(GetServiceIdRowId(serviceId));
+                    alert("user Service Marked as Delivered!!");
                 }
                 else {
-                    alert("failed to approve user request");
+                    alert("failed to Marked  user Service as Delivered");
                 }
             });
     };
 
-    var GetPendingRequests = function () {
-        pendingApprovalRequestsTable.Hide();
-        pendingApprovalRequestsTable.StartLoadingWheel();
+    var GetApprovedRequests = function () {
+        ApprovedRequestsTable.Hide();
+        ApprovedRequestsTable.StartLoadingWheel();
         apiManager.get(
             "MaintenanceServicesRequests",
-            "PendingApproval",
+            "ApprovedRequests",
             {},
-            function (allPendingApprovalRequests) {
-                pendingApprovalRequestsTable.Rerender(
-                    allPendingApprovalRequests,
+            function (allApprovedRequests) {
+                ApprovedRequestsTable.Rerender(
+                    allApprovedRequests,
                     serviceDetailsViewManager.GetAndDisplayServiceDetails,
                     function (serviceDetails) { return serviceDetails.Id; });
-                pendingApprovalRequestsTable.StopLoadingWheel();
-                pendingApprovalRequestsTable.Show();
+                ApprovedRequestsTable.StopLoadingWheel();
+                ApprovedRequestsTable.Show();
             });
     };
 
     return {
-        ApproveRequest: ApprovePendingRequest,
-        DisplayAllPendingRequests: GetPendingRequests
+        MaskRequestAsDelivered: MaskRequestAsDelivered,
+        DisplayAllApprovedRequests: GetApprovedRequests
     };
 };
