@@ -13,7 +13,12 @@
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult ApprovedServices()
+        {
+            return View();
+        }
+
+        public ActionResult DeliveredServices()
         {
             return View();
         }

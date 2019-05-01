@@ -1,3 +1,104 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Services Pending Approval";
 }
+@section styles{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css" />
+}
+
+@section scripts {
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+
+    <script src="~/Scripts/Utilities/APIManager.js"></script>
+    <script src="~/Scripts/Utilities/LoadingWheelManager.js"></script>
+    <script src="~/Scripts/Utilities/TableManager.js"></script>
+    <script src="~/Scripts/ViewManagers/PendingApprovalViewManager.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        appRoot = '@Url.Content("~/")';
+        pendingApprovalViewManager = PendingApprovalViewManager(
+            TableContainerIdDetails("ServicesPendingApprovalLoadingWheel",
+                "ServicesPendingApprovalContainer",
+                "ServicesPendingApprovalTable"),
+            "ApproveRequestTableButton",
+            "ServiceDetailsTemplate",
+            "ServiceDetailsLoadingWheel",
+            "ServiceDetailsContainer");
+
+        pendingApprovalViewManager.DisplayAllPendingRequests();
+    });
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Services Pending Approval</h2>
+        <div id="ServicesPendingApprovalLoadingWheel"></div>
+        <div id="ServicesPendingApprovalContainer">
+            <table id="ServicesPendingApprovalTable" class="display table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Required Service</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Apprive</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2>Service Details</h2>
+        <div id="ServiceDetailsLoadingWheel"></div>
+        <div id="ServiceDetailsContainer">
+    </div>
+</div>
+
+<div class="template">
+    <div id="ApproveRequestTableButton">
+        <button id="__id__" class="btn btn-success" type="button" onclick="pendingApprovalViewManager.ApproveRequest(__OnClickEventHandlerData__);">Approve</button>
+    </div>
+    <div id="ServiceDetailsTemplate">
+        <table class="layout-table">
+            <tbody>
+                <tr>
+                    <th>Id:</th>
+                    <td>__Id__</td>
+                </tr>
+                <tr>
+                    <th>Service Needed:</th>
+                    <td>__ServiceNeeded__</td>
+                </tr>
+                <tr>
+                    <th>Description:</th>
+                    <td>__ServiceDescription__</td>
+                </tr>
+                <tr>
+                    <th>Delivery Date:</th>
+                    <td>__DeliveryDate__</td>
+                </tr>
+                <tr>
+                    <th>Delivery Time:</th>
+                    <td>__DeliveryTime__</td>
+                </tr>
+                <tr>
+                    <th>Delivery Location:</th>
+                    <td>__DeliveryLocation__</td>
+                </tr>
+                <tr>
+                    <th>Status:</th>
+                    <td>__ServiceStatus__</td>
+                </tr>
+                <tr>
+                    <th>Rating:</th>
+                    <td>__Rating__</td>
+                </tr>
+                <tr>
+                    <th>User Language:</th>
+                    <td>__UserPreferredLanguage__</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
