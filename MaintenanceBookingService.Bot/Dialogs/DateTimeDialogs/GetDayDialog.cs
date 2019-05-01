@@ -66,6 +66,8 @@
                     English = dayMessageExtraOptions,
                     Arabic = dayMessageExtraOptions
                 });
+
+            this.ConversationData.SetWaitingForUserInputFlag();
         }
 
         private string[] GetDayOptions()

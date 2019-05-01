@@ -62,6 +62,8 @@
                     English = dayMessageExtraOptions,
                     Arabic = dayMessageExtraOptions
                 });
+
+            this.ConversationData.SetWaitingForUserInputFlag();
         }
 
         private string[] GetMonthOptions()

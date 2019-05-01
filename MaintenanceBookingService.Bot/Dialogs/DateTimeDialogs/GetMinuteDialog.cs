@@ -58,6 +58,8 @@
                 this.UserProfile,
                 turnContext,
                 cancellationToken);
+
+            this.ConversationData.SetWaitingForUserInputFlag();
         }
     }
 }
