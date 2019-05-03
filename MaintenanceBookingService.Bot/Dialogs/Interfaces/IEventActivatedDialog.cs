@@ -10,10 +10,11 @@
     using MaintenanceBookingService.Bot.Managers;
     using MaintenanceBookingService.Bot.Models;
     using Microsoft.Bot.Builder;
+    using Microsoft.Bot.Schema;
 
     public abstract class IEventActivatedDialog : IStatelessDialog
     {
-        public static string DialogName { get; private set; }
+        public static string DialogName { get; protected set; }
 
         static IEventActivatedDialog()
         {
@@ -51,8 +52,13 @@
                     this.ConversationData,
                     turnContext.Adapter,
                     turnContext.Activity.GetConversationReference()));
+            var msg = turnContext.Activity.CreateReply();
+            msg.Type = ActivityTypes.EndOfConversation;
+            msg.AsEndOfConversationActivity().Code = EndOfConversationCodes.CompletedSuccessfully;
+
+            await turnContext.SendActivityAsync(msg, cancellationToken);
         }
-        
+
         protected async Task RevertToNormalStateAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             var oldState = EventActivatedDialogsStateManager.GetRequestStatus(

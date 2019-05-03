@@ -1,5 +1,6 @@
 ﻿namespace MaintenanceBookingService.Bot.Dialogs
 {
+    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using MaintenanceBookingService.Bot.Dialogs.Definitions;
@@ -11,6 +12,11 @@
 
     public class GettingUserFeedBackDialog : IEventActivatedDialog
     {
+        static GettingUserFeedBackDialog()
+        {
+            DialogName = MethodBase.GetCurrentMethod().DeclaringType.Name;
+        }
+
         protected GettingUserFeedBackDialog(DialogStateData storedDialogState)
             : base(storedDialogState)
         {
@@ -43,7 +49,7 @@
                     this.ConversationData.NewUserMaintenanceServiceId,
                     this.ConversationData.ServiceBookingForm.RequiredServiceDescription
                 };
-
+            
             await ConversationUtils.SendMessageBasedOnUserPreferredLanguage(
                            Constants.RequestStatusUpdate.ServiceRequestDeliveredMessage,
                            UserProfile,
