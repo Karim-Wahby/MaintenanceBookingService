@@ -48,19 +48,22 @@ var TableManager = function (tableContainerIdDetails, tableSettings) {
             var row = table.row.add(tableRowsData[i]).node();
 
             if (onClickEventHandler != undefined) {
-                var onClickEventData = onClickDataSelector(tableRowsData[i]);
-                $(row).click(function () {
-                    var alredyClicked = $(this).hasClass("highlighted-row");
-                    if (!alredyClicked) {
-                        $(this).addClass("highlighted-row");
-                        $(this).siblings().removeClass("highlighted-row");
-                        onClickEventHandler(onClickEventData);
-                    }
-                });
+                $(row).click(getRowOnClickClosure(onClickEventHandler, onClickDataSelector(tableRowsData[i])));
             }
         }
 
         table.draw();
+    };
+
+    var getRowOnClickClosure = function (onClickEventHandler, data) {
+        return function () {
+            var alredyClicked = $(this).hasClass("highlighted-row");
+            if (!alredyClicked) {
+                $(this).addClass("highlighted-row");
+                $(this).siblings().removeClass("highlighted-row");
+                onClickEventHandler(data);
+            }
+        };
     };
 
     var addRow = function (rowData, onClickEventHandler, onClickData) {
