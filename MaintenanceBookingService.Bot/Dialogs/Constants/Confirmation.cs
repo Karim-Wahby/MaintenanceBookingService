@@ -60,12 +60,12 @@
         public static HashSet<string> RequiredServicenAdjustmentOptionValues = new HashSet<string>() { "تعديل الخدمه المطلوبه", "adjust requested service" };
         public static HashSet<string> ServiceDescriptionAdjustmentOptionValues = new HashSet<string>() { "تعديل وصف الخدمه", "adjust service description" };
         public static HashSet<string> AdressAdjustmentOptionValues = new HashSet<string>() { "تعديل وصف الخدمه", "adjust address" };
-        public static HashSet<string> DayAdjustmentOptionValues = new HashSet<string>() { "تعديل يوم استلام الخدمه", "Adjust Day" };
-        public static HashSet<string> MonthAdjustmentOptionValues = new HashSet<string>() {"تعديل شهر استلام الخدمه" , "Adjust Month" };
-        public static HashSet<string> YearAdjustmentOptionValues = new HashSet<string>() {"تعديل سنه استلام الخدمه", "Adjust Year" };
-        public static HashSet<string> HourAdjustmentOptionValues = new HashSet<string>() {"تعديل ساعه استلام الخدمه", "Adjust Hour" };
-        public static HashSet<string> MinuteAdjustmentOptionValues = new HashSet<string>() {"تعديل دقيقه استلام الخدمه", "Adjust Minute" };
-        public static HashSet<string> PartOfDayAdjustmentOptionValues = new HashSet<string>() {"تعديل نهارا/ليلا" , "Adjust PM/AM" };
+        public static HashSet<string> DayAdjustmentOptionValues = new HashSet<string>() { "تعديل يوم استلام الخدمه", "adjust day" };
+        public static HashSet<string> MonthAdjustmentOptionValues = new HashSet<string>() {"تعديل شهر استلام الخدمه" , "adjust month" };
+        public static HashSet<string> YearAdjustmentOptionValues = new HashSet<string>() {"تعديل سنه استلام الخدمه", "adjust year" };
+        public static HashSet<string> HourAdjustmentOptionValues = new HashSet<string>() {"تعديل ساعه استلام الخدمه", "adjust hour" };
+        public static HashSet<string> MinuteAdjustmentOptionValues = new HashSet<string>() {"تعديل دقيقه استلام الخدمه", "adjust minute" };
+        public static HashSet<string> PartOfDayAdjustmentOptionValues = new HashSet<string>() {"تعديل نهارا/ليلا" , "adjust pm/am" };
     }                                                                                                      
 }                                                                                                          
                                                                                                            

@@ -102,8 +102,8 @@
             }
         };
 
-        public static HashSet<string> PMOptionValues = new HashSet<string>() { "am", "صباحا" };
-        public static HashSet<string> AMOptionValues = new HashSet<string>() { "pm", "مساء" };
+        public static HashSet<string> PMOptionValues = new HashSet<string>() { "pm", "مساء" };
+        public static HashSet<string> AMOptionValues = new HashSet<string>() { "am", "صباحا" };
         public static HashSet<string> TomorrowOptionValues = new HashSet<string>() { "غدا", "tomorrow" };
         public static HashSet<string> TodayOptionValues = new HashSet<string>() { "today" , "اليوم" };
         public static HashSet<string> AsSoonAsPossibleOptionValues = new HashSet<string>() { "as soon as possible", "فى اسرع وقت" };

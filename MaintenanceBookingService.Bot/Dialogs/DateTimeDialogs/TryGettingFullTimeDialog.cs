@@ -53,6 +53,7 @@
 
             if (userRequestedTime.HasValue)
             {
+                ConversationData.ServiceBookingForm.FailedToRecognizeProvidedTime = true;
                 ConversationData.SetWaitingForUserInputFlag(false);
                 ConversationData.ServiceBookingForm.Hour = userRequestedTime.Value.Hours % 12;
                 ConversationData.ServiceBookingForm.Minutes = userRequestedTime.Value.Minutes;

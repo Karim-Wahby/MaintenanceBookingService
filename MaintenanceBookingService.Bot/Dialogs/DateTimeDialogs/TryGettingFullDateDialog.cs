@@ -47,6 +47,7 @@
                 }
                 else
                 {
+                    ConversationData.ServiceBookingForm.FailedToRecognizeProvidedDate = true;
                     ConversationData.SetWaitingForUserInputFlag(false);
                     ConversationData.ServiceBookingForm.Day = userRequestedDate.Value.Day;
                     ConversationData.ServiceBookingForm.Month = userRequestedDate.Value.Month;
